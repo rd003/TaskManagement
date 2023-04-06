@@ -40,3 +40,12 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#tailwind
+/tailwind.config.js
+
+
+#pocketbase
+/pb_data
+/pb_migrations
+/pocketbase.exe
