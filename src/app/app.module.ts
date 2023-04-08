@@ -4,13 +4,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './ui/side-nav/side-nav.component';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
-import { SidenavBrandComponent } from './ui/sidenav-brand/sidenav-brand.component';
-import { SidenavSearchComponent } from './ui/sidenav-search/sidenav-search.component';
-import { SidenavLinksComponent } from './ui/sidenav-links/sidenav-links.component';
-import { AppSidenavBottomComponent } from './ui/sidenav-bottom/app-sidenav-bottom.component';
+import { SidenavBrandComponent } from './ui/side-nav/sidenav-brand/sidenav-brand.component';
+import { SidenavSearchComponent } from './ui/side-nav/sidenav-search/sidenav-search.component';
+import { SidenavLinksComponent } from './ui/side-nav/sidenav-links/sidenav-links.component';
+import { AppSidenavBottomComponent } from './ui/side-nav/sidenav-bottom/app-sidenav-bottom.component';
 import { ContentComponent } from './ui/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ContentPageHeadingComponent } from './ui/content-page-heading/content-page-heading.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { taskCategoriesReducer } from './states/task-category/task-categories.reducres';
+import { TaskCategoriesEffects } from './states/task-category/task-category.effects';
+import { SidenavLinksListComponent } from './ui/side-nav/sidenav-links-list/sidenav-links-list.component';
 
 @NgModule({
   declarations: [
@@ -22,12 +26,14 @@ import { ContentPageHeadingComponent } from './ui/content-page-heading/content-p
     SidenavLinksComponent,
     AppSidenavBottomComponent,
     ContentComponent,
-    ContentPageHeadingComponent
+    SidenavLinksListComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({taskCategories:taskCategoriesReducer}),
+    EffectsModule.forRoot([TaskCategoriesEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

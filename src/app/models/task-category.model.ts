@@ -3,8 +3,9 @@ import { PaginationMetadata } from "./pagination-metadata";
 
 export interface TaskCategory extends CollectionMetadata{
     title: string;
+    icon: string;
 }
 
-export interface TaskCategoryList extends PaginationMetadata{
+export interface TaskCategoryListModel extends PaginationMetadata{
     items: TaskCategory[];
 }

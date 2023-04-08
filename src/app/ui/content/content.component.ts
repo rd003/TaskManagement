@@ -3,18 +3,18 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-content',
   template: `
-        <app-content-page-heading [heading]="'My Day'"></app-content-page-heading>
+        <h2 class="text-2xl font-bold">My day</h2>
         <!-- container for tasks -->
         <div class="my-4 flex-grow overflow-y-auto ">
            <!-- card containing taks start -->
-           <div class="py-3 px-4 my-1 bg-gray-200 rounded-lg flex  space-x-4">
-               <div class="radio-container">
+           <div class="py-3 px-4 my-1 bg-gray-200 rounded-lg flex">
+               <div class="radio-container mr-2">
                   <input type="radio" class="radio"/>
                </div>  
                <div class="task-container">
                   design ui 
                </div>   
-               <div class="star-container">
+               <div class="star-container ml-auto">
                    <i class="fa-regular fa-star"></i>
                </div>
            </div>

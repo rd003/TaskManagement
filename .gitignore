@@ -46,6 +46,4 @@ Thumbs.db
 
 
 #pocketbase
-/pb_data
-/pb_migrations
 /pocketbase.exe
