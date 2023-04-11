@@ -1,23 +1,24 @@
-import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { EMPTY, Observable, Subject, concatMap, startWith, takeUntil, tap } from 'rxjs';
+import { TaskCategory } from 'src/app/models/task-category.model';
+import { TaskModel } from 'src/app/models/task.model';
+import { AppState } from 'src/app/states/app-state';
+import { TaskActions } from 'src/app/states/task/task.actions';
 
 @Component({
   selector: 'app-content',
   template: `
-        <h2 class="text-2xl font-bold">My day</h2>
+        <ng-container *ngIf="selectedCategory$|async as selectedCategory">
+          <app-page-heading [heading]="selectedCategory.title"></app-page-heading>
+        </ng-container>
         <!-- container for tasks -->
         <div class="my-4 flex-grow overflow-y-auto ">
            <!-- card containing taks start -->
-           <div class="py-3 px-4 my-1 bg-gray-200 rounded-lg flex">
-               <div class="radio-container mr-2">
-                  <input type="radio" class="radio"/>
-               </div>  
-               <div class="task-container">
-                  design ui 
-               </div>   
-               <div class="star-container ml-auto">
-                   <i class="fa-regular fa-star"></i>
-               </div>
-           </div>
+           <ng-container *ngIf="tasks$ | async as tasks">
+             <app-task-display [tasks]="tasks"></app-task-display>
+           </ng-container>
            <!-- card containing taks end -->
     
         </div>  
@@ -61,6 +62,39 @@ import { Component } from '@angular/core';
   styles: [
   ]
 })
-export class ContentComponent {
+export class ContentComponent implements OnInit,OnDestroy {
+  tasks$!: Observable<ReadonlyArray<TaskModel>>; 
+  loading$!: Observable<boolean>;
+  error$!: Observable<HttpErrorResponse | null>;
+  selectedCategory$!: Observable<TaskCategory | null>;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  constructor(private _store:Store<AppState>) {
+    
+  }
+  
+  ngOnInit(): void {
+    this.tasks$ = this._store.pipe(
+      select(state => state.tasksState.tasks));
+    this.loading$ = this._store.pipe(
+      select(state => state.tasksState.loading));
+    this.error$ = this._store.pipe(
+      select(state => state.tasksState.error));
+    this.selectedCategory$ = this._store.pipe(
+      select(state=>state.taskCategories.selectedTaskCategory)
+    )
+    
+    this.selectedCategory$.pipe(
+      concatMap(taskCategory => {
+        this._store.dispatch(TaskActions.loadTasks({ taskCategoryId: taskCategory ? taskCategory.id : '' }))
+        return EMPTY
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
 
+  
+  ngOnDestroy(){
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 }

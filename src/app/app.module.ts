@@ -15,6 +15,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { taskCategoriesReducer } from './states/task-category/task-categories.reducres';
 import { TaskCategoriesEffects } from './states/task-category/task-category.effects';
 import { SidenavLinksListComponent } from './ui/side-nav/sidenav-links-list/sidenav-links-list.component';
+import { taskReducer } from './states/task/task.reducers';
+import { TaskEffects } from './states/task/task.effects';
+import { AppState } from './states/app-state';
+import { TaskDisplayComponent } from './ui/content/task-display/task-display.component';
+import { PageHeadingComponent } from './ui/content/page-heading/page-heading.component';
 
 @NgModule({
   declarations: [
@@ -27,13 +32,18 @@ import { SidenavLinksListComponent } from './ui/side-nav/sidenav-links-list/side
     AppSidenavBottomComponent,
     ContentComponent,
     SidenavLinksListComponent,
+    TaskDisplayComponent,
+    PageHeadingComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({taskCategories:taskCategoriesReducer}),
-    EffectsModule.forRoot([TaskCategoriesEffects])
+    StoreModule.forRoot<AppState>({
+      taskCategories: taskCategoriesReducer,
+      tasksState: taskReducer
+    }),
+    EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

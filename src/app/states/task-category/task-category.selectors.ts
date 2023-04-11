@@ -19,3 +19,9 @@ export const selectTaskCategoriesError = createSelector(
     selectTaskCategoryState,
     state=>state.error
 )
+
+export const selectedTaskCategory = createSelector(
+    selectTaskCategoryState,
+    state=>state.selectedTaskCategory
+)
+

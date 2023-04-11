@@ -1,8 +1,8 @@
 import {Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment.development";
-import { TaskCategoryListModel } from "../models/task-category.model";
-import { catchError, EMPTY } from "rxjs";
+import { TaskCategory, TaskCategoryListModel } from "../models/task-category.model";
+import { catchError, EMPTY, map, Observable } from "rxjs";
 
 @Injectable({ providedIn:'root'})
 export class TaskCategoryService{
@@ -10,6 +10,17 @@ export class TaskCategoryService{
 
     getTaskCategories() {
         return this.http.get<TaskCategoryListModel>(this.baseUrl).pipe(
+            catchError(error => {
+                console.log(error);
+                return EMPTY;
+            })
+        );
+    }
+
+    getDefaultCategory():Observable<TaskCategory> {
+        const url = `${this.baseUrl}?filter=(title='My Day')`;
+        return this.http.get<TaskCategoryListModel>(url).pipe(
+            map(response=>response.items[0]),
             catchError(error => {
                 console.log(error);
                 return EMPTY;
