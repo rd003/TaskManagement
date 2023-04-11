@@ -18,7 +18,7 @@ export class TaskCategoryService{
     }
 
     getDefaultCategory():Observable<TaskCategory> {
-        const url = `${this.baseUrl}?filter=(title='My Day')`;
+        const url = `${this.baseUrl}?filter=(title='Tasks' || title='tasks')`;
         return this.http.get<TaskCategoryListModel>(url).pipe(
             map(response=>response.items[0]),
             catchError(error => {

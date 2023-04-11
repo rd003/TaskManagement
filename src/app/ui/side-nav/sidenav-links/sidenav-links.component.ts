@@ -32,6 +32,8 @@ export class SidenavLinksComponent implements OnInit {
     this.loading$ = this._store.pipe(select(state=>state.taskCategories.loading));
     this.error$ = this._store.pipe(select(state=>state.taskCategories.error));
     
+    // loading the default selected category
+    this._store.dispatch(TaskCategoryActions.loadDefaultSelectedTaskCategory());
   }
 
   dispatchSelectTaskCategory(selectedTaskCategory: TaskCategory) {
