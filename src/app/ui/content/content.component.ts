@@ -10,18 +10,24 @@ import { TaskActions } from 'src/app/states/task/task.actions';
 @Component({
   selector: 'app-content',
   template: `
-        <ng-container *ngIf="selectedCategory$|async as selectedCategory">
-          <app-page-heading [heading]="selectedCategory.title"></app-page-heading>
+    <ng-container *ngIf="selectedCategory$|async as selectedCategory">
+      <app-page-heading [heading]="selectedCategory.title"></app-page-heading>
+    </ng-container>
+
+       
+    <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async} as data">
+     <!-- container for tasks -->
+      <div class="my-4  flex-grow overflow-y-auto" [ngClass]="{'flex items-center justify-center':data.loading}">
+
+         <button *ngIf="data.loading" class="btn btn-square loading"></button>
+
+         <!-- card containing taks start -->
+         <app-task-display *ngIf="!data.loading" [tasks]="data.tasks??[]"></app-task-display>
+         <!-- card containing taks end -->
+
+      </div> 
         </ng-container>
-        <!-- container for tasks -->
-        <div class="my-4 flex-grow overflow-y-auto ">
-           <!-- card containing taks start -->
-           <ng-container *ngIf="tasks$ | async as tasks">
-             <app-task-display [tasks]="tasks"></app-task-display>
-           </ng-container>
-           <!-- card containing taks end -->
-    
-        </div>  
+         
 
          <!-- text-box for adding todo item -->
            <div class="relative w-full">

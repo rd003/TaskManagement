@@ -1,4 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { TaskCategory } from 'src/app/models/task-category.model';
+import { AppState } from 'src/app/states/app-state';
+import { TaskCategoryLinkActions } from 'src/app/states/task-category-link/task-category-link.action';
+import { TaskCategoryActions } from 'src/app/states/task-category/task-category.actions';
 
 @Component({
   selector: 'app-side-nav',
@@ -14,8 +19,7 @@ import { Component, Input } from '@angular/core';
         </div>
       <!-- middle-section-end -->
 
-        <app-sidenav-bottom></app-sidenav-bottom>
-      
+        <app-sidenav-bottom (toggleAddNewTaskCategoryEvent)="toggleAddNewTaskCategoryInput()"></app-sidenav-bottom>
      </div>
   `,
   styles: [
@@ -23,4 +27,15 @@ import { Component, Input } from '@angular/core';
 })
 export class SideNavComponent {
   @Input() hideSideNav = true;
+
+  // dispatch 'toggleAddNewTaskcategoryInput' action (done)
+  toggleAddNewTaskCategoryInput() {
+    this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskcategoryInput());
+  }
+
+  
+  
+  constructor(private _store: Store<AppState>) {
+     
+  }
 }

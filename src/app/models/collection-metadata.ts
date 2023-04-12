@@ -1,5 +1,5 @@
 export interface CollectionMetadata{
-    id:             string;
+id:             string;
 collectionId:   string;
 collectionName: string;
 created:        string;

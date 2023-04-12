@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
        </button>
     <div class="flex">
          <app-side-nav [hideSideNav]="hideSidenav"></app-side-nav>
-         <app-content class="px-10 py-7  h-screen bg-gradient-to-r from-gray-600 to-blue-800 flex-1 flex flex-col"></app-content>
+         <app-content class="px-10 py-7  h-screen bg-gradient-to-r from-pink-400 to-pink-800 flex-1 flex flex-col"></app-content>
     </div>
   `,
   styles: [

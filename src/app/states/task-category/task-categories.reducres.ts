@@ -37,4 +37,18 @@ export const taskCategoriesReducer = createReducer(
     on(TaskCategoryActions.loadDefaultSelectedTaskCategoryFailure, (state,{error}) => (
         {...state,error}
     )),
+
+    on(TaskCategoryActions.addTaskCategory, (state, { taskCategory }) => {
+       return { ...state, loading: true }
+    }),
+    on(TaskCategoryActions.addTaskCategorySuccess, (state, { taskCategory }) => (
+        {
+            ...state,
+            taskCategories: [...state.taskCategories,taskCategory],
+            loading: false
+        }
+     )),
+    on(TaskCategoryActions.addTaskCategoryFailure, (state, { error }) => (
+        {...state, loading: false, error}
+    ))
 );

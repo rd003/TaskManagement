@@ -2,7 +2,7 @@ import {Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment.development";
 import { TaskCategory, TaskCategoryListModel } from "../models/task-category.model";
-import { catchError, EMPTY, map, Observable } from "rxjs";
+import { catchError, EMPTY, map, Observable, of } from "rxjs";
 
 @Injectable({ providedIn:'root'})
 export class TaskCategoryService{
@@ -26,6 +26,11 @@ export class TaskCategoryService{
                 return EMPTY;
             })
         );
+    }
+
+    addTaskCategory(taskCategory: TaskCategory):Observable<TaskCategory> {
+        return of(taskCategory)
+       //return this.http.post<TaskCategory>(this.baseUrl, taskCategory);
     }
 
     constructor(private http: HttpClient)

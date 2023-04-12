@@ -2,7 +2,7 @@ import {Injectable } from '@angular/core';
 import { TaskCategoryActions } from './task-category.actions';
 import { TaskCategoryService } from 'src/app/services/task-category.sevice';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable()
@@ -42,8 +42,22 @@ export class TaskCategoriesEffects{
         );
     });
 
-    
-
+    addTaskCategory = createEffect(() => {
+        return this._actions$.pipe(
+            ofType(TaskCategoryActions.addTaskCategory),
+            switchMap(({ taskCategory }) => (
+                this._taskCategoryService.addTaskCategory(taskCategory)
+                    .pipe(
+                         map(taskCategory => TaskCategoryActions.addTaskCategorySuccess({ taskCategory })
+                        ),
+                        catchError(
+                            error => of(TaskCategoryActions.addTaskCategoryFailure({ error }))
+                        )
+                    )
+            ))
+        );
+    });
+   
     constructor(
         private _taskCategoryService: TaskCategoryService,
         private _actions$: Actions

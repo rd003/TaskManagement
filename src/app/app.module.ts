@@ -20,6 +20,7 @@ import { TaskEffects } from './states/task/task.effects';
 import { AppState } from './states/app-state';
 import { TaskDisplayComponent } from './ui/content/task-display/task-display.component';
 import { PageHeadingComponent } from './ui/content/page-heading/page-heading.component';
+import { taskCategoryLinkReducer } from './states/task-category-link/task-category-link.reducers';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PageHeadingComponent } from './ui/content/page-heading/page-heading.com
     HttpClientModule,
     StoreModule.forRoot<AppState>({
       taskCategories: taskCategoriesReducer,
-      tasksState: taskReducer
+      tasksState: taskReducer,
+      taskCategoryLink:taskCategoryLinkReducer
     }),
     EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects])
   ],
