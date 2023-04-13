@@ -18,7 +18,7 @@ import { SidenavLinksListComponent } from '../sidenav-links-list/sidenav-links-l
          [showAddNewTaskCategoryInput]="data.showAddNewTaskCategoryInput??false"
          (selectTaskCategoryEvent)="dispatchSelectTaskCategory($event)"
          (newCategoryInputFocusOutEvent)="onNewCategoryInputFocusout($event)"
-         (inputElementReady)="onInputElementReady($event)"
+         (onKeyDownEvent)="onKeyDown($event)"
          ></app-sidenav-links-list>
       </ng-container>
     </nav>
@@ -33,19 +33,17 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   error$!: Observable<HttpErrorResponse|null>;
   selectedTaskCategory$!: Observable<TaskCategory | null>;
   showAddNewTaskCategoryInput$!: Observable<boolean>;
-  @ViewChild('addCategoryInput', { read: ElementRef }) addCategoryInput!: ElementRef<HTMLInputElement>;
-
-
-  onInputElementReady(inputElement: HTMLInputElement) {
-    this.addCategoryInput =  new ElementRef(inputElement);
-  }
+  @ViewChild(SidenavLinksListComponent) linksList!: SidenavLinksListComponent;
+ 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      console.log('parent ',this.addCategoryInput);
       this.showAddNewTaskCategoryInput$ = this._store.pipe(select(state => state.taskCategoryLink.showAddNewTaskCategoryInput)).pipe(
         tap(value => {
           if (value) {
-           // this.addCategoryInput.nativeElement.focus();
+           // here i want to set focus of input element
+             setTimeout(() => {
+               this.linksList.getElementRef().nativeElement.querySelector('input').focus();
+             });
           }
         })
       )
@@ -75,13 +73,22 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
     this._store.dispatch(TaskCategoryActions.selectTaskCategory({selectedTaskCategory}))
   }
 
-  /* when we focus out from add new category input, then it will do few things
-   1. This input box should disappear 👈 work on it
+  
+  onNewCategoryInputFocusout(title:string) {
+    this.updateTaskCategoryList(title);
+  }
+
+  onKeyDown(title: string) {
+    this.updateTaskCategoryList(title);
+  }
+
+  /* when we focus out from add new category input or when user press Enter key, then it will do few things
+   1. This input box should disappear ✅
    2. change the value of toggleAddNewTaskcategoryInput to 'false',
       it means we would dispatch the related action here ✅
-   3. add new task category action should be dispatch 
+   3. add new task category action should be dispatch ✅
   */
-  onNewCategoryInputFocusout(title:string) {
+  private updateTaskCategoryList(title:string):void {
     this.toggleAddNewTaskCategoryInput();
     if (title) {
       this.addNewTaskCategory(title);

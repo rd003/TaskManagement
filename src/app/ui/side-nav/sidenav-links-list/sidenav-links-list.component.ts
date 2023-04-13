@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { TaskCategory } from 'src/app/models/task-category.model';
 
 @Component({
@@ -12,41 +12,48 @@ import { TaskCategory } from 'src/app/models/task-category.model';
             
     <div *ngIf="showAddNewTaskCategoryInput" class="space-x-3 flex items-center text-gray-600  py-2 px-3 rounded-lg">
       <!-- input for adding a new task category  -->
-      <input type="text" class="w-full rounded-lg outline-0 text-md  py-2 px-3" #addCategoryInput (focusout)="onFocusout(addCategoryInput.value)" autofocus>
+       <input type="text" class="w-full rounded-lg outline-0 text-md  py-2 px-3" #addCategoryInput (keydown)="onKeyDown($event,addCategoryInput.value)" (focusout)="onFocusout(addCategoryInput.value)" autofocus>
     </div>
    
   `,
   styles: [
   ]
 })
-export class SidenavLinksListComponent implements AfterViewInit {
+export class SidenavLinksListComponent {
+  keyDownFlag = false;
   @Input() taskCategories!: ReadonlyArray<TaskCategory>;
   @Input() selectedTaskCategory!: TaskCategory | null;
   @Output() selectTaskCategoryEvent = new EventEmitter<TaskCategory>();
   @Input() showAddNewTaskCategoryInput!: boolean;
-  @Output() newCategoryInputFocusOutEvent= new EventEmitter<string>();
-  @ViewChild('addCategoryInput') addCategoryInput!: ElementRef<HTMLInputElement>;
-  @Output() inputElementReady = new EventEmitter<HTMLInputElement>;
-  
+  @Output() newCategoryInputFocusOutEvent = new EventEmitter<string>();
+  @Output() onKeyDownEvent = new EventEmitter<string>();
+
   selectTaskCategory(taskCategory: TaskCategory) {
     this.selectTaskCategoryEvent.emit(taskCategory);
   }
   
-  onFocusout(value:string) {
-    this.newCategoryInputFocusOutEvent.emit(value);
+  onFocusout(value: string) {
+    if (!this.keyDownFlag) {
+       this.newCategoryInputFocusOutEvent.emit(value);
+    }
+    this.keyDownFlag = false;
+  }
+  
+  onKeyDown(event: KeyboardEvent, value: string) {
+    if (event.key === 'Enter') {
+       event.preventDefault();
+       this.keyDownFlag = true;
+       this.onKeyDownEvent.emit(value);
+    }
+  }
+
+  getElementRef(): ElementRef {
+    return this.elementRef;
   }
 
   constructor(private elementRef: ElementRef) {
     
   }
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      console.log('💩 child ',this.addCategoryInput)
-      if (this.showAddNewTaskCategoryInput) {
-        this.inputElementReady.emit(this.addCategoryInput.nativeElement);
-      }
-      
-    }, 0);
-  }
+
 
 }
