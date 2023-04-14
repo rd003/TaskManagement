@@ -1,19 +1,26 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { TaskState } from "./task.reducers";
 
-const taskFeatureState = createFeatureSelector<TaskState>('tasksState');
+export const taskFeatureState = createFeatureSelector<TaskState>('tasksState');
 
-const tasks = createSelector(
+export const tasks = createSelector(
     taskFeatureState,
     (state)=>state.tasks
 )
 
-const loading = createSelector(
+export const loading = createSelector(
     taskFeatureState,
     (state)=>state.loading
 )
 
-const error = createSelector(
+export const error = createSelector(
     taskFeatureState,
     (state)=>state.error
 )
+
+// export const selectTaskCategoryCounts = createSelector(
+//     taskFeatureState,
+//     (taskState) => taskState.tasks.length
+// )
+ 
+

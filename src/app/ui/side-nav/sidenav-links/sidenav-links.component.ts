@@ -52,6 +52,7 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   }
 
   ngOnInit() {
+    //select task categories with count
     this.taskCategories$ = this._store.pipe(
       select(state=>state.taskCategories.taskCategories)
     );
