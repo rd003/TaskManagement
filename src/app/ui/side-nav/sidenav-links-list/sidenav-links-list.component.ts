@@ -5,14 +5,15 @@ import { TaskCategory } from 'src/app/models/task-category.model';
   selector: 'app-sidenav-links-list',
   template: `
     <a *ngFor="let taskCategory of taskCategories" class="space-x-3 flex items-center text-gray-600 hover:bg-gray-200 hover:text-gray-800 py-2 px-3 rounded-lg" [ngClass]="{'text-gray-800 bg-gray-200':taskCategory.id==selectedTaskCategory?.id}">
-                <i class="{{taskCategory.icon}}" aria-hidden="true"></i>
-                <span (click)="selectTaskCategory(taskCategory)" class="link-text cursor-pointer">{{taskCategory.title}} </span>
-                
+                <i class="{{taskCategory.icon}} text-pink-500" aria-hidden="true"></i>
+                <span (click)="selectTaskCategory(taskCategory)" class="link-text cursor-pointer flex-1">{{taskCategory.title}} </span>   
+                <span *ngIf="taskCategory.count>0" class="inline-block bg-pink-500 rounded-full text-white text-xs px-2 py-0.5">{{taskCategory.count}}</span>              
             </a>
             
-    <div *ngIf="showAddNewTaskCategoryInput" class="space-x-3 flex items-center text-gray-600  py-2 px-3 rounded-lg">
-      <!-- input for adding a new task category  -->
-       <input type="text" class="w-full rounded-lg outline-0 text-md  py-2 px-3" #addCategoryInput (keydown)="onKeyDown($event,addCategoryInput.value)" (focusout)="onFocusout(addCategoryInput.value)" autofocus>
+    <div *ngIf="showAddNewTaskCategoryInput" class="space-x-3 flex items-center text-gray-600  py-2 px-3 rounded-lg ">
+       <i class="fa fa-bars text-pink-500" aria-hidden="true"></i>
+       <!-- input for adding a new task category  -->
+       <input type="text" class="w-full rounded-lg outline-0 text-sm  py-2 px-3" #addCategoryInput (keydown)="onKeyDown($event,addCategoryInput.value)" (focusout)="onFocusout(addCategoryInput.value)" autofocus>
     </div>
    
   `,

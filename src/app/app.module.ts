@@ -21,6 +21,12 @@ import { AppState } from './states/app-state';
 import { TaskDisplayComponent } from './ui/content/task-display/task-display.component';
 import { PageHeadingComponent } from './ui/content/page-heading/page-heading.component';
 import { taskCategoryLinkReducer } from './states/task-category-link/task-category-link.reducers';
+import { AddTaskComponent } from './ui/content/add-task/add-task.component';
+import { RadioComponent } from './ui/content/add-task/radio/radio.component';
+import { PlusIconComponent } from './ui/content/add-task/plus-icon/plus-icon.component';
+import { InputFieldComponent } from './ui/content/add-task/input-field/input-field.component';
+import { RightButtonsComponent } from './ui/content/add-task/right-buttons/right-buttons.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -35,11 +41,17 @@ import { taskCategoryLinkReducer } from './states/task-category-link/task-catego
     SidenavLinksListComponent,
     TaskDisplayComponent,
     PageHeadingComponent,
+    AddTaskComponent,
+    RadioComponent,
+    PlusIconComponent,
+    InputFieldComponent,
+    RightButtonsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     StoreModule.forRoot<AppState>({
       taskCategories: taskCategoriesReducer,
       tasksState: taskReducer,

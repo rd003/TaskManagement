@@ -29,8 +29,8 @@ export class TaskCategoryService{
     }
 
     addTaskCategory(taskCategory: TaskCategory):Observable<TaskCategory> {
-        return of(taskCategory)
-       //return this.http.post<TaskCategory>(this.baseUrl, taskCategory);
+        //return of(taskCategory)
+       return this.http.post<TaskCategory>(this.baseUrl, taskCategory);
     }
 
     constructor(private http: HttpClient)

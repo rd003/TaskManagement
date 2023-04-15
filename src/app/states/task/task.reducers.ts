@@ -14,7 +14,7 @@ export const _initialTaskState:TaskState = {
 export const taskReducer = createReducer(
     _initialTaskState,
     on(
-        TaskActions.loadTasks,(state,{taskCategoryId})=>({...state,loading:true})
+        TaskActions.loadTasks,(state)=>({...state,loading:true})
     ),
 
     on(

@@ -6,6 +6,7 @@ export interface TaskCategory extends CollectionMetadata{
     icon: string;
     task_group_id?: string;
     can_modified: boolean;
+    count: number;
 }
 
 export interface TaskCategoryListModel extends PaginationMetadata{

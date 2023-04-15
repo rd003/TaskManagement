@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { EMPTY, Observable, Subject, concatMap, startWith, takeUntil, tap } from 'rxjs';
+import {  Observable, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
 import { TaskModel } from 'src/app/models/task.model';
 import { AppState } from 'src/app/states/app-state';
 import { TaskActions } from 'src/app/states/task/task.actions';
+import * as TaskSelectors from '../../states/task/task.selectors'
 
 @Component({
   selector: 'app-content',
@@ -24,44 +25,13 @@ import { TaskActions } from 'src/app/states/task/task.actions';
          <!-- card containing taks start -->
          <app-task-display *ngIf="!data.loading" [tasks]="data.tasks??[]"></app-task-display>
          <!-- card containing taks end -->
-
+           
       </div> 
         </ng-container>
          
 
          <!-- text-box for adding todo item -->
-           <div class="relative w-full">
-            <!-- plus icon -->
-            <i class="fas fa-plus absolute flex items-center inset-y-0 left-0 pl-3"></i>
-            
-            <!-- radio button -->
-            <div class="absolute top-0 left-0 w-10 h-full flex items-center justify-center rounded-l-lg opacity-0">
-              <input type="radio" class="hidden"/>
-            </div>
-            
-            <!-- input field -->
-            <input type="text" class="w-full py-3 pl-9 pr-40 rounded-lg outline-none" placeholder="Add a new task...">
-
-            <!--right side button container -->
-            <div class="absolute top-0 right-0 h-full flex items-center">
-              <button class="h-full w-10 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300">
-                  <i class="far fa-folder"></i>
-              </button>
-
-              <button class="h-full w-10 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300">
-                  <i class="far fa-calendar-alt"></i>
-              </button>
-
-              <button class="h-full w-10 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300">
-                  <i class="far fa-clock"></i>
-              </button>
-
-              <button class="h-full w-10 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300">
-                  <i class="fas fa-redo"></i>
-              </button>
-
-            </div>
-           </div>       
+          <app-add-task></app-add-task>   
           <!-- text-box end -->
         
   `,
@@ -73,34 +43,38 @@ export class ContentComponent implements OnInit,OnDestroy {
   loading$!: Observable<boolean>;
   error$!: Observable<HttpErrorResponse | null>;
   selectedCategory$!: Observable<TaskCategory | null>;
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  // destroy$: Subject<boolean> = new Subject<boolean>();
+
+  
   constructor(private _store:Store<AppState>) {
-    
+   
   }
   
   ngOnInit(): void {
-    this.tasks$ = this._store.pipe(
-      select(state => state.tasksState.tasks));
+    this.tasks$ = this._store.select(TaskSelectors.selectTasksBySelectedCategory);
     this.loading$ = this._store.pipe(
       select(state => state.tasksState.loading));
     this.error$ = this._store.pipe(
       select(state => state.tasksState.error));
     this.selectedCategory$ = this._store.pipe(
-      select(state=>state.taskCategories.selectedTaskCategory)
+      select(state => state.taskCategories.selectedTaskCategory)
     )
     
-    this.selectedCategory$.pipe(
-      concatMap(taskCategory => {
-        this._store.dispatch(TaskActions.loadTasks({ taskCategoryId: taskCategory ? taskCategory.id : '' }))
-        return EMPTY
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
+    this._store.dispatch(TaskActions.loadTasks())
+
+    // this.selectedCategory$.pipe(
+    //   concatMap(taskCategory => {
+    //     // this._store.dispatch(TaskActions.loadTasks({ taskCategoryId: taskCategory ? taskCategory.id : '' }))
+    //     return EMPTY
+    //   }),
+    //   takeUntil(this.destroy$)
+    // ).subscribe();
+
   }
 
   
   ngOnDestroy(){
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    // this.destroy$.next(true);
+    // this.destroy$.unsubscribe();
   }
 }

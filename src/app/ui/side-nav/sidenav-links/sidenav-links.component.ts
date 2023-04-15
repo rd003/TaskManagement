@@ -7,6 +7,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AppState } from 'src/app/states/app-state';
 import { TaskCategoryLinkActions } from 'src/app/states/task-category-link/task-category-link.action';
 import { SidenavLinksListComponent } from '../sidenav-links-list/sidenav-links-list.component';
+import * as TaskSelectors from '../../../states/task/task.selectors';
+
+
 @Component({
   selector: 'app-sidenav-links',
   template: `
@@ -27,6 +30,7 @@ import { SidenavLinksListComponent } from '../sidenav-links-list/sidenav-links-l
   styles: [
   ]
 })
+  
 export class SidenavLinksComponent implements OnInit,AfterViewInit {
   taskCategories$!: Observable<ReadonlyArray<TaskCategory>>;
   loading$!: Observable<boolean>;
@@ -53,9 +57,7 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
 
   ngOnInit() {
     //select task categories with count
-    this.taskCategories$ = this._store.pipe(
-      select(state=>state.taskCategories.taskCategories)
-    );
+    this.taskCategories$ =    this._store.select(TaskSelectors.selectTaskCategoriesWithCount)
     this.loading$ = this._store.pipe(select(state=>state.taskCategories.loading));
     this.error$ = this._store.pipe(select(state => state.taskCategories.error));
     // getting the selected category from store
@@ -105,7 +107,8 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
            collectionName:'',
            title: title,
            can_modified: true,
-           icon: "fa fa-bars"
+      icon: "fa fa-bars",
+           count:0
     };
    this._store.dispatch(TaskCategoryActions.addTaskCategory({ taskCategory }));
   }

@@ -8,11 +8,20 @@ import { TaskListModel } from "../models/task.model";
 export class TaskService{
     private baseUrl = `${environment.baseUrl}/task/records`;
 
-    getTasks(taskCategoryId: string) {
-        if (!taskCategoryId)
-            return EMPTY;
-        const url = `${this.baseUrl}?filter=(task_category_id='${taskCategoryId}')`;
-        return this.http.get<TaskListModel>(url).pipe(
+    // getTasks(taskCategoryId: string) {
+    //     if (!taskCategoryId)
+    //         return EMPTY;
+    //     const url = `${this.baseUrl}?filter=(task_category_id='${taskCategoryId}')`;
+    //     return this.http.get<TaskListModel>(url).pipe(
+    //         catchError(error => {
+    //             console.log(error);
+    //             return EMPTY;
+    //         })
+    //     );
+    // }
+
+     getTasks() {
+        return this.http.get<TaskListModel>(this.baseUrl).pipe(
             catchError(error => {
                 console.log(error);
                 return EMPTY;

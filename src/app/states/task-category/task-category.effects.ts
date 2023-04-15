@@ -1,6 +1,6 @@
 import {Injectable } from '@angular/core';
 import { TaskCategoryActions } from './task-category.actions';
-import { TaskCategoryService } from 'src/app/services/task-category.sevice';
+import { TaskCategoryService } from 'src/app/services/task-category.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { TaskService } from "src/app/services/task.sevice";
+import { TaskService } from "src/app/services/task.service";
 import { TaskActions } from "./task.actions";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { of } from "rxjs";
@@ -13,8 +13,8 @@ export class TaskEffects{
             return this._actions$
                 .pipe(
                     ofType(TaskActions.loadTasks),
-                    switchMap(({ taskCategoryId }) => (
-                        this._taskService.getTasks(taskCategoryId).pipe(
+                    switchMap(_ => (
+                        this._taskService.getTasks().pipe(
                             map(result => {
                                 return TaskActions.loadTasksSuccess({
                                     tasks: result.items
