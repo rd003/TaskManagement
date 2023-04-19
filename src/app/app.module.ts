@@ -27,6 +27,7 @@ import { PlusIconComponent } from './ui/content/add-task/plus-icon/plus-icon.com
 import { InputFieldComponent } from './ui/content/add-task/input-field/input-field.component';
 import { RightButtonsComponent } from './ui/content/add-task/right-buttons/right-buttons.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DropdownMenuComponent } from './ui/util/dropdown-menu/dropdown-menu.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     RadioComponent,
     PlusIconComponent,
     InputFieldComponent,
-    RightButtonsComponent
+    RightButtonsComponent,
+    DropdownMenuComponent
   ],
   imports: [
     BrowserModule,
