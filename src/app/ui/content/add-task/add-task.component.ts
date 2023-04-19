@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { InputFieldComponent } from './input-field/input-field.component';
+import { DropdownMenuService } from 'src/app/services/dropdown-menu.service';
+import { DropDownValuesModel } from 'src/app/models/dropdown-values.model';
 
 @Component({
   selector: 'app-add-task',
@@ -17,7 +19,13 @@ import { InputFieldComponent } from './input-field/input-field.component';
             ></app-input-field>
 
             <!-- this component will show only when input field have a value -->
-            <app-right-buttons ></app-right-buttons>
+            <app-right-buttons
+            [dueDateOptions]="dueDateOptions"
+            [remindMeOptions]="remindMeOptions"
+            [repeatOptions]="repeatOptions"
+            >
+
+            </app-right-buttons>
    </div> 
 
   `,
@@ -27,6 +35,10 @@ import { InputFieldComponent } from './input-field/input-field.component';
 export class AddTaskComponent {
   inputFocus = false;
   @ViewChild('InputFieldComponent') inputFieldComponent!: InputFieldComponent;
+
+  dueDateOptions:DropDownValuesModel[] = this.dropdownMenuService.getDueDateOptions();
+  remindMeOptions:DropDownValuesModel[] = this.dropdownMenuService.getRemindMeOptions();
+  repeatOptions:DropDownValuesModel[] = this.dropdownMenuService.getRepeatOptions();
 
   onInputFocus() {
     this.inputFocus = true;
@@ -45,6 +57,10 @@ export class AddTaskComponent {
   onRadioClick() {
     //console.log('clicked')
     this.inputFieldComponent.onSubmit();
+  }
+
+  constructor(private dropdownMenuService:DropdownMenuService) {
+    
   }
 
 }
