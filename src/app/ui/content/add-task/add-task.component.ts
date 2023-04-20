@@ -1,7 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { InputFieldComponent } from './input-field/input-field.component';
 import { DropdownMenuService } from 'src/app/services/dropdown-menu.service';
-import { DropDownValuesModel } from 'src/app/models/dropdown-values.model';
+import { DropDownValuesModel, SelectedDropDownModel } from 'src/app/models/dropdown-values.model';
+import { RightButtonsComponent } from './right-buttons/right-buttons.component';
 
 @Component({
   selector: 'app-add-task',
@@ -19,10 +20,13 @@ import { DropDownValuesModel } from 'src/app/models/dropdown-values.model';
             ></app-input-field>
 
             <!-- this component will show only when input field have a value -->
-            <app-right-buttons
+            <app-right-buttons #rightButtonsComponent
             [dueDateOptions]="dueDateOptions"
             [remindMeOptions]="remindMeOptions"
             [repeatOptions]="repeatOptions"
+            (dueDateSelected)="selectDueDate($event)"
+            (remindMeSelected)="selectRemindMe($event)"
+            (repeatSelected)="selectRepeat($event)"
             >
 
             </app-right-buttons>
@@ -35,6 +39,22 @@ import { DropDownValuesModel } from 'src/app/models/dropdown-values.model';
 export class AddTaskComponent {
   inputFocus = false;
   @ViewChild('InputFieldComponent') inputFieldComponent!: InputFieldComponent;
+ 
+  selectedDueDateOption: SelectedDropDownModel={label:"",value:""};
+  selectedRemindMeOption: SelectedDropDownModel={label:"",value:""};
+  selectedRepeatOption: SelectedDropDownModel = { label: "", value: "" };
+
+  selectDueDate(selectedOption:SelectedDropDownModel) {
+    this.selectedDueDateOption = selectedOption;
+  }
+
+  selectRemindMe(selectedOption:SelectedDropDownModel) {
+    this.selectedRemindMeOption = selectedOption;
+  }
+  
+  selectRepeat(selectedOption:SelectedDropDownModel) {
+    this.selectedRepeatOption = selectedOption;
+  }
 
   dueDateOptions:DropDownValuesModel[] = this.dropdownMenuService.getDueDateOptions();
   remindMeOptions:DropDownValuesModel[] = this.dropdownMenuService.getRemindMeOptions();
@@ -52,6 +72,7 @@ export class AddTaskComponent {
 
   onSubmitForm(formValues:any) {
    // console.log(formValues);
+    console.log(this.selectedDueDateOption)
   }
 
   onRadioClick() {
@@ -63,4 +84,5 @@ export class AddTaskComponent {
     
   }
 
+ 
 }

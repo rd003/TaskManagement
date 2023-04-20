@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DropDownValuesModel, SelectedDropDownModel } from 'src/app/models/dropdown-values.model';
 
 export enum RightSideButtons{
@@ -23,7 +23,7 @@ export enum RightSideButtons{
         [rightSideButtonValue]="rightSideButtons.DUE_DATE"
         [selectedValue]="selectedDueDateOption.label"
         (optionSelectedEvent)="selectDueDateOption($event)"
-        (optionRemovedEvent)="removeSelectedOption()"
+        (optionRemovedEvent)="removeSelectedDueDate()"
         >
         </app-dropdown-menu>
 
@@ -35,7 +35,7 @@ export enum RightSideButtons{
         [rightSideButtonValue]="rightSideButtons.REMIND_ME"
         [selectedValue]="convertToDate(selectedRemindMeOption.value)"
         (optionSelectedEvent)="selectRemindMeOption($event)"
-        (optionRemovedEvent)="removeSelectedOption()"
+        (optionRemovedEvent)="removeSelectedRemindMe()"
         >
         </app-dropdown-menu>
 
@@ -47,7 +47,7 @@ export enum RightSideButtons{
         [rightSideButtonValue]="rightSideButtons.REPEAT"
         [selectedValue]="selectedRepeatOption.label"
         (optionSelectedEvent)="selectRepeatOption($event)"
-        (optionRemovedEvent)="removeSelectedOption()"
+        (optionRemovedEvent)="removeSelectedRepeat()"
         >
         </app-dropdown-menu>
                  
@@ -60,6 +60,10 @@ export class RightButtonsComponent {
   @Input() dueDateOptions!: DropDownValuesModel[];
   @Input() remindMeOptions!: DropDownValuesModel[];
   @Input() repeatOptions!: DropDownValuesModel[];
+
+  @Output() dueDateSelected = new EventEmitter<SelectedDropDownModel>();
+  @Output() remindMeSelected = new EventEmitter<SelectedDropDownModel>();
+  @Output() repeatSelected = new EventEmitter<SelectedDropDownModel>();
   
   activeButton = "";
   rightSideButtons = RightSideButtons;
@@ -67,22 +71,33 @@ export class RightButtonsComponent {
   selectedRemindMeOption: SelectedDropDownModel={label:"",value:""};
   selectedRepeatOption: SelectedDropDownModel={label:"",value:""};
 
-  // common
   selectDueDateOption(selectedOption:SelectedDropDownModel) {
     this.selectedDueDateOption = selectedOption;
+    this.dueDateSelected.emit(selectedOption);
   }
 
   selectRemindMeOption(selectedOption:SelectedDropDownModel) {
     this.selectedRemindMeOption = selectedOption;
+    this.remindMeSelected.emit(selectedOption);
   }
 
   selectRepeatOption(selectedOption:SelectedDropDownModel) {
     this.selectedRepeatOption = selectedOption;
+    this.repeatSelected.emit(selectedOption);
+
   }
 
 
-  removeSelectedOption() {
-    
+  removeSelectedDueDate() {
+    this.selectedDueDateOption = { label: "", value: "" };
+  }
+
+  removeSelectedRemindMe() {
+    this.selectedRemindMeOption = { label: "", value: "" };
+  }
+
+  removeSelectedRepeat() {
+    this.selectedRepeatOption= { label: "", value: "" };
   }
 
   convertToDate(value: string | number): string {

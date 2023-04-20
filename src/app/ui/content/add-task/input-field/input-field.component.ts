@@ -19,7 +19,10 @@ export class InputFieldComponent {
   @Output() onSubmitEvent = new EventEmitter<any>();
 
   taskForm: FormGroup = new FormGroup({
-    task:new FormControl('')
+    task: new FormControl(''),
+    due_date: new FormControl(''),
+    reminder_date: new FormControl(''),
+    repeat_type:new FormControl('')
   })
    
   onSubmit() {

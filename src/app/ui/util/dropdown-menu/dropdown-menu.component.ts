@@ -6,7 +6,7 @@ import { RightSideButtons } from '../../content/add-task/right-buttons/right-but
   selector: 'app-dropdown-menu',
   template: `
       <div class="relative">
-        <button class="h-full space-x-1 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300 tooltip" data-tip="Add due date" (click)="toggleDropdown(rightSideButtonValue)">
+        <button class="h-full space-x-1 flex items-center justify-center rounded-r-lg hover:bg-gray-200 transition duration-300 tooltip" [attr.data-tip]="tooltipText" (click)="toggleDropdown(rightSideButtonValue)">
             <i [class]="iconClass"></i>
             <span *ngIf="selectedValue">
                  {{selectedValue}}
