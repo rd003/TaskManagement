@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { InputFieldComponent } from './input-field/input-field.component';
 import { DropdownMenuService } from 'src/app/services/dropdown-menu.service';
 import { DropDownValuesModel, SelectedDropDownModel } from 'src/app/models/dropdown-values.model';
@@ -38,7 +38,9 @@ import { RightButtonsComponent } from './right-buttons/right-buttons.component';
 })
 export class AddTaskComponent {
   inputFocus = false;
+  @Output() submitFormEvent = new EventEmitter<any>();
   @ViewChild('InputFieldComponent') inputFieldComponent!: InputFieldComponent;
+  @ViewChild('rightButtonsComponent') rightButtonsComponent!: RightButtonsComponent;
  
   selectedDueDateOption: SelectedDropDownModel={label:"",value:""};
   selectedRemindMeOption: SelectedDropDownModel={label:"",value:""};
@@ -70,15 +72,26 @@ export class AddTaskComponent {
     }, 200);
   }
 
-  onSubmitForm(formValues:any) {
+  onSubmitForm(formValues: any) {
+    formValues.due_date = this.selectedDueDateOption.value;
+    formValues.reminder_date = this.selectedRemindMeOption.value;
+    formValues.repeat_type = this.selectedRepeatOption.value;
+    this.submitFormEvent.emit(formValues);
+    this.rightButtonsComponent.removeSelectedDueDate();
+    this.rightButtonsComponent.removeSelectedRemindMe();
+    this.rightButtonsComponent.removeSelectedRepeat();
    // console.log(formValues);
-    console.log(this.selectedDueDateOption)
+    //console.log(this.selectedDueDateOption)
   }
+
+  
 
   onRadioClick() {
     //console.log('clicked')
     this.inputFieldComponent.onSubmit();
   }
+
+
 
   constructor(private dropdownMenuService:DropdownMenuService) {
     

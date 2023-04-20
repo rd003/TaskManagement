@@ -1,8 +1,8 @@
 import {Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment.development";
-import { catchError, delay, EMPTY, tap } from "rxjs";
-import { TaskListModel } from "../models/task.model";
+import { catchError, delay, EMPTY, Observable, of, tap } from "rxjs";
+import { TaskListModel, TaskModel } from "../models/task.model";
 
 @Injectable({ providedIn:'root'})
 export class TaskService{
@@ -27,8 +27,21 @@ export class TaskService{
                 return EMPTY;
             })
         );
-    }
+     }
 
+    addTask(task: TaskModel):Observable<TaskModel> {
+        return of(task).pipe(
+             delay(200)
+         )
+        //  return this.http.post<TaskModel>(this.baseUrl, task).pipe(
+        //     delay(100),
+        //     catchError(error => {
+        //         console.log(error);
+        //         return EMPTY;
+        //     })
+        // );
+     }
+    
     constructor(private http: HttpClient)
     { 
         

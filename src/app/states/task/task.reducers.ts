@@ -26,6 +26,21 @@ export const taskReducer = createReducer(
         TaskActions.loadTasksFailure, (state, { error }) => ({
            ...state,loading:false,error
        })   
+    ),
+    on(
+        TaskActions.addTask, (state, { task }) => (
+            {...state,loading:true}
+        )
+    ),
+    on(
+        TaskActions.addTaskSuccess, (state, { task }) => (
+            {...state,task,loading:false}
+        )
+    ),
+    on(
+        TaskActions.addTaskFailure, (state, { error }) => (
+            {...state,error,loading:false}
+        )
     )
  
 );

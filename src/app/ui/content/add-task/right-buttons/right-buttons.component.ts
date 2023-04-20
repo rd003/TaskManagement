@@ -64,6 +64,8 @@ export class RightButtonsComponent {
   @Output() dueDateSelected = new EventEmitter<SelectedDropDownModel>();
   @Output() remindMeSelected = new EventEmitter<SelectedDropDownModel>();
   @Output() repeatSelected = new EventEmitter<SelectedDropDownModel>();
+  // @ViewChild('dropDownMenuComponent') dropDownMenuComponent!: DropdownMenuComponent;
+  
   
   activeButton = "";
   rightSideButtons = RightSideButtons;

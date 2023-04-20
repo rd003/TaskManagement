@@ -27,7 +27,21 @@ export class TaskEffects{
                     ))
                 );
         }
-     )
+    )
+    
+    addTask = createEffect(() => {
+        return this._actions$.pipe(
+            ofType(TaskActions.addTask),
+            switchMap(({ task }) => (
+                this._taskService.addTask(task).pipe(
+                    map(task => 
+                        TaskActions.addTaskSuccess({ task })
+                    ),
+                    catchError(error=>of(TaskActions.addTaskFailure({error})))
+                )
+            ))
+        )
+    })
 
     constructor(private _actions$:Actions,private _taskService:TaskService) {
         

@@ -7,6 +7,9 @@ export const TaskActions = createActionGroup({
     events: {
         'Load Tasks': emptyProps(),
         'Load Tasks Success': props<{ tasks: ReadonlyArray<TaskModel> }>(),
-        'Load Tasks Failure': props<{error:HttpErrorResponse}>()
+        'Load Tasks Failure': props<{ error: HttpErrorResponse }>(),
+        'Add Task': props<{ task: TaskModel }>(),
+        'Add Task Success': props<{ task: TaskModel }>(),
+        'Add Task Failure': props<{ error: HttpErrorResponse }>(),
     }
 })

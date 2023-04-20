@@ -31,7 +31,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          
 
          <!-- text-box for adding todo item -->
-          <app-add-task></app-add-task>   
+          <app-add-task (submitFormEvent)="onFormSubmit($event)"></app-add-task>   
           <!-- text-box end -->
         
   `,
@@ -60,7 +60,8 @@ export class ContentComponent implements OnInit,OnDestroy {
       select(state => state.taskCategories.selectedTaskCategory)
     )
     
-    this._store.dispatch(TaskActions.loadTasks())
+    this._store.dispatch(TaskActions.loadTasks());
+
 
     // this.selectedCategory$.pipe(
     //   concatMap(taskCategory => {
@@ -72,6 +73,9 @@ export class ContentComponent implements OnInit,OnDestroy {
 
   }
 
+  onFormSubmit(formValues: any){
+    console.log(formValues);   
+  }
   
   ngOnDestroy(){
     // this.destroy$.next(true);

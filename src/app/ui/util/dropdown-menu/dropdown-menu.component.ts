@@ -55,17 +55,17 @@ export class DropdownMenuComponent {
     this.selectedOption = { label: "", value: "" };
     this.optionRemovedEvent.emit();
     this.hideDropdown();
-    
   }
 
-
-  hideDropdown() {
+  
+ 
+  private hideDropdown() {
     this.activeButton = "";
   }
  
   toggleDropdown(button: RightSideButtons) {
     if (this.activeButton === button.toString())
-      this.activeButton = ""
+      this.hideDropdown();
     else
       this.activeButton=button.toString()
   }
