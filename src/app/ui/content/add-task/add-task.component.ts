@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, OnInit,Input, ViewChild } from '@angular/core';
 import { InputFieldComponent } from './input-field/input-field.component';
 import { DropdownMenuService } from 'src/app/services/dropdown-menu.service';
 import { DropDownValuesModel, SelectedDropDownModel } from 'src/app/models/dropdown-values.model';
 import { RightButtonsComponent } from './right-buttons/right-buttons.component';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/states/app-state';
+import { TaskActions } from 'src/app/states/task/task.actions';
+import { TaskCategory } from 'src/app/models/task-category.model';
+import {  Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-task',
@@ -36,15 +41,24 @@ import { RightButtonsComponent } from './right-buttons/right-buttons.component';
   styles: [
   ]
 })
-export class AddTaskComponent {
+export class AddTaskComponent implements OnInit {
   inputFocus = false;
-  @Output() submitFormEvent = new EventEmitter<any>();
+  @Input() selectedCategory!: TaskCategory|null;
+  // @Output() submitFormEvent = new EventEmitter<any>();
   @ViewChild('InputFieldComponent') inputFieldComponent!: InputFieldComponent;
   @ViewChild('rightButtonsComponent') rightButtonsComponent!: RightButtonsComponent;
- 
+  
+  dueDateOptions:DropDownValuesModel[] = this.dropdownMenuService.getDueDateOptions();
+  remindMeOptions:DropDownValuesModel[] = this.dropdownMenuService.getRemindMeOptions();
+  repeatOptions:DropDownValuesModel[] = this.dropdownMenuService.getRepeatOptions();
+  // selectedCategory$!: Observable<TaskCategory | null>;
+  
   selectedDueDateOption: SelectedDropDownModel={label:"",value:""};
   selectedRemindMeOption: SelectedDropDownModel={label:"",value:""};
   selectedRepeatOption: SelectedDropDownModel = { label: "", value: "" };
+   destroy$: Subject<boolean> = new Subject<boolean>();
+  
+  
 
   selectDueDate(selectedOption:SelectedDropDownModel) {
     this.selectedDueDateOption = selectedOption;
@@ -58,9 +72,6 @@ export class AddTaskComponent {
     this.selectedRepeatOption = selectedOption;
   }
 
-  dueDateOptions:DropDownValuesModel[] = this.dropdownMenuService.getDueDateOptions();
-  remindMeOptions:DropDownValuesModel[] = this.dropdownMenuService.getRemindMeOptions();
-  repeatOptions:DropDownValuesModel[] = this.dropdownMenuService.getRepeatOptions();
 
   onInputFocus() {
     this.inputFocus = true;
@@ -72,30 +83,42 @@ export class AddTaskComponent {
     }, 200);
   }
 
-  onSubmitForm(formValues: any) {
-    formValues.due_date = this.selectedDueDateOption.value;
-    formValues.reminder_date = this.selectedRemindMeOption.value;
-    formValues.repeat_type = this.selectedRepeatOption.value;
-    this.submitFormEvent.emit(formValues);
+ 
+  onSubmitForm(task: any) {
+    if (task.title.length < 4) {
+      alert("title should not be less that 4 character")
+      return;
+    }
+    task.due_date = this.selectedDueDateOption.value;
+    task.reminder_date = this.selectedRemindMeOption.value;
+    task.repeat_type = this.selectedRepeatOption.value;
+    task.task_category_id = this.selectedCategory?.id;
+    this._store.dispatch(TaskActions.addTask({task}))
+    this.removeAllSelectedValues();
+  }
+
+  private removeAllSelectedValues():void {
     this.rightButtonsComponent.removeSelectedDueDate();
     this.rightButtonsComponent.removeSelectedRemindMe();
     this.rightButtonsComponent.removeSelectedRepeat();
-   // console.log(formValues);
-    //console.log(this.selectedDueDateOption)
   }
 
   
 
   onRadioClick() {
-    //console.log('clicked')
     this.inputFieldComponent.onSubmit();
   }
 
-
-
-  constructor(private dropdownMenuService:DropdownMenuService) {
+  ngOnInit(): void {
+   
     
   }
+
+
+  constructor(private dropdownMenuService:DropdownMenuService,private _store:Store<AppState>) {
+    
+  }
+
 
  
 }

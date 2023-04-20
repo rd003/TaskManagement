@@ -29,17 +29,13 @@ export class TaskService{
         );
      }
 
-    addTask(task: TaskModel):Observable<TaskModel> {
-        return of(task).pipe(
-             delay(200)
-         )
-        //  return this.http.post<TaskModel>(this.baseUrl, task).pipe(
-        //     delay(100),
-        //     catchError(error => {
-        //         console.log(error);
-        //         return EMPTY;
-        //     })
-        // );
+    addTask(task: TaskModel): Observable<TaskModel> {
+         return this.http.post<TaskModel>(this.baseUrl, task).pipe(
+            catchError(error => {
+                console.log(error);
+                return EMPTY;
+            })
+        );
      }
     
     constructor(private http: HttpClient)

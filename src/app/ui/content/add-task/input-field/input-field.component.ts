@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   template: `
      <!-- input field -->
        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" #frmTask>
-        <input type="text" (focus)="onFocus.emit()" (focusout)="onFocusout.emit()" formControlName="task"  class="w-full py-3 pl-10 pr-40 rounded-lg outline-none" placeholder="Add a new task...">
+        <input type="text" (focus)="onFocus.emit()" (focusout)="onFocusout.emit()" formControlName="title"  class="w-full py-3 pl-10 pr-40 rounded-lg outline-none" placeholder="Add a new task...">
         </form>
         
   `,
@@ -19,7 +19,7 @@ export class InputFieldComponent {
   @Output() onSubmitEvent = new EventEmitter<any>();
 
   taskForm: FormGroup = new FormGroup({
-    task: new FormControl(''),
+    title: new FormControl(''),
     due_date: new FormControl(''),
     reminder_date: new FormControl(''),
     repeat_type:new FormControl('')

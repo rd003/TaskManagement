@@ -11,13 +11,15 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 @Component({
   selector: 'app-content',
   template: `
-    <ng-container *ngIf="selectedCategory$|async as selectedCategory">
+    <!-- <ng-container *ngIf="selectedCategory$|async as selectedCategory">
       <app-page-heading [heading]="selectedCategory.title"></app-page-heading>
-    </ng-container>
+    </ng-container> -->
 
        
-    <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async} as data">
+    <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async,selectedCategory:selectedCategory$|async} as data">
      <!-- container for tasks -->
+     <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
+
       <div class="my-4  flex-grow overflow-y-auto" [ngClass]="{'flex items-center justify-center':data.loading}">
 
          <button *ngIf="data.loading" class="btn btn-square loading"></button>
@@ -27,11 +29,13 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          <!-- card containing taks end -->
            
       </div> 
+
+        <app-add-task [selectedCategory]="data.selectedCategory"></app-add-task>   
+
         </ng-container>
          
 
          <!-- text-box for adding todo item -->
-          <app-add-task (submitFormEvent)="onFormSubmit($event)"></app-add-task>   
           <!-- text-box end -->
         
   `,
@@ -73,9 +77,9 @@ export class ContentComponent implements OnInit,OnDestroy {
 
   }
 
-  onFormSubmit(formValues: any){
-    console.log(formValues);   
-  }
+  // onFormSubmit(formValues: any){
+  //   console.log(formValues);   
+  // }
   
   ngOnDestroy(){
     // this.destroy$.next(true);

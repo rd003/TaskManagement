@@ -34,7 +34,7 @@ export const taskReducer = createReducer(
     ),
     on(
         TaskActions.addTaskSuccess, (state, { task }) => (
-            {...state,task,loading:false}
+             { ...state,tasks:[...state.tasks,task] , loading: false }
         )
     ),
     on(
