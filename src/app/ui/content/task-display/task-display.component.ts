@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskModel } from 'src/app/models/task.model';
 
 @Component({
@@ -6,9 +6,9 @@ import { TaskModel } from 'src/app/models/task.model';
   template: `
      <div *ngFor="let task of tasks" class="py-3 px-4 my-1 bg-gray-200 rounded-lg flex">
                <div class="radio-container mr-2">
-                  <input type="radio" class="radio"/>
+                  <input type="radio" (click)="toggleTaskEvent.emit(task)" class="radio"/>
                </div>  
-               <div class="task-container">
+               <div class="task-container" [ngClass]="{'line-through':task.completed}">
                   {{task.title}}
                </div>   
                <div class="star-container ml-auto">
@@ -20,5 +20,7 @@ import { TaskModel } from 'src/app/models/task.model';
   ]
 })
 export class TaskDisplayComponent {
-  @Input() tasks!: ReadonlyArray<TaskModel>;
+   @Input() tasks!: ReadonlyArray<TaskModel>;
+   @Output() toggleTaskEvent = new EventEmitter<TaskModel>();
+   
 }

@@ -1,7 +1,7 @@
 import {Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment.development";
-import { catchError, delay, EMPTY, Observable, of, tap } from "rxjs";
+import { catchError, delay, EMPTY, Observable, of, tap, throwError } from "rxjs";
 import { TaskListModel, TaskModel } from "../models/task.model";
 
 @Injectable({ providedIn:'root'})
@@ -24,7 +24,7 @@ export class TaskService{
         return this.http.get<TaskListModel>(this.baseUrl).pipe(
             catchError(error => {
                 console.log(error);
-                return EMPTY;
+                return throwError(()=>error);
             })
         );
      }
@@ -33,17 +33,17 @@ export class TaskService{
          return this.http.post<TaskModel>(this.baseUrl, task).pipe(
             catchError(error => {
                 console.log(error);
-                return EMPTY;
+                return throwError(()=>error);
             })
         );
     }
     
     toggleTask(task:TaskModel):Observable<TaskModel> {
-        task.completed = !task.completed;
-        return this.http.put<TaskModel>(this.baseUrl, task).pipe(
+        const updatedTask = { ...task, completed: !task.completed };
+        return this.http.put<TaskModel>(this.baseUrl, updatedTask).pipe(
             catchError(error => {
-                console.log(error);
-                return EMPTY;
+                console.log({'💩💩': error });
+                return throwError(()=>error);
             })
         );
     }

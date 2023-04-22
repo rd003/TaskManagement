@@ -42,7 +42,9 @@ export const taskReducer = createReducer(
             { ...state, error, loading: false }
         )
     ),
-    on(TaskActions.toggleTask, (state, { task }) => ({ ...state, loading: true })),
+    on(TaskActions.toggleTask, (state, { task }) => 
+         ({ ...state, loading: true })
+     ),
     
     on(TaskActions.toggleTaskSuccess, (state, { task }) => {
         const updatedTasks = state.tasks.map(a=>{
@@ -51,11 +53,13 @@ export const taskReducer = createReducer(
             else
               return a;
           }
-          );
+        );
           return {...state,loading:false,tasks:updatedTasks}
     }
     ),
 
-    on(TaskActions.toggleTaskFailure, (state, { error }) => ({...state,loading:false,error}))
+    on(TaskActions.toggleTaskFailure, (state, { error }) =>
+        ( { ...state, loading: false, error })
+    )
  
 );

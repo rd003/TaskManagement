@@ -21,43 +21,43 @@ export class TaskEffects{
                                 })
                             }),
                             catchError(error => (
-                               of(TaskActions.loadTasksFailure({error}) )
+                                of(TaskActions.loadTasksFailure({ error }))
                             ))
                         )
                     ))
                 );
         }
-    )
+    );
     
     addTask = createEffect(() => {
         return this._actions$.pipe(
             ofType(TaskActions.addTask),
             switchMap(({ task }) => (
                 this._taskService.addTask(task).pipe(
-                    map(task => 
+                    map(task =>
                         TaskActions.addTaskSuccess({ task })
                     ),
-                    catchError(error=>of(TaskActions.addTaskFailure({error})))
+                    catchError(error => of(TaskActions.addTaskFailure({ error })))
                 )
             ))
         )
-    })
+    });
 
     toggleTask = createEffect(
         () => {
             return this._actions$.pipe(
                 ofType(TaskActions.toggleTask),
-                switchMap(({ task }) => 
+                switchMap(({ task }) =>
                     this._taskService.toggleTask(task).pipe(
                         map(task => TaskActions.toggleTaskSuccess({ task })),
                         catchError(error => {
-                            return of(TaskActions.addTaskFailure(error))
+                            return of(TaskActions.toggleTaskFailure(error))
                         })
-                   )
+                    )
                 )
             )
         }
-    )
+    );
 
     constructor(private _actions$:Actions,private _taskService:TaskService) {
         

@@ -11,13 +11,9 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 @Component({
   selector: 'app-content',
   template: `
-    <!-- <ng-container *ngIf="selectedCategory$|async as selectedCategory">
-      <app-page-heading [heading]="selectedCategory.title"></app-page-heading>
-    </ng-container> -->
-
-       
+       <span>{{loading$|async}}</span>
     <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async,selectedCategory:selectedCategory$|async} as data">
-     <!-- container for tasks -->
+     <!-- container for tasks --> <span>{{data.loading}}</span>
      <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
 
       <div class="my-4  flex-grow overflow-y-auto" [ngClass]="{'flex items-center justify-center':data.loading}">
@@ -25,7 +21,12 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          <button *ngIf="data.loading" class="btn btn-square loading"></button>
 
          <!-- card containing taks start -->
-         <app-task-display *ngIf="!data.loading" [tasks]="data.tasks??[]"></app-task-display>
+         <app-task-display *ngIf="!data.loading" 
+         [tasks]="data.tasks??[]"
+         (toggleTaskEvent)="toggleTask($event)"
+         >
+
+         </app-task-display>
          <!-- card containing taks end -->
            
       </div> 
@@ -49,6 +50,10 @@ export class ContentComponent implements OnInit,OnDestroy {
   selectedCategory$!: Observable<TaskCategory | null>;
   // destroy$: Subject<boolean> = new Subject<boolean>();
 
+  toggleTask(task: TaskModel) {
+    this._store.dispatch(TaskActions.toggleTask({ task }))
+  }
+
   
   constructor(private _store:Store<AppState>) {
    
@@ -63,26 +68,11 @@ export class ContentComponent implements OnInit,OnDestroy {
     this.selectedCategory$ = this._store.pipe(
       select(state => state.taskCategories.selectedTaskCategory)
     )
-    
     this._store.dispatch(TaskActions.loadTasks());
-
-
-    // this.selectedCategory$.pipe(
-    //   concatMap(taskCategory => {
-    //     // this._store.dispatch(TaskActions.loadTasks({ taskCategoryId: taskCategory ? taskCategory.id : '' }))
-    //     return EMPTY
-    //   }),
-    //   takeUntil(this.destroy$)
-    // ).subscribe();
-
   }
 
-  // onFormSubmit(formValues: any){
-  //   console.log(formValues);   
-  // }
   
   ngOnDestroy(){
-    // this.destroy$.next(true);
-    // this.destroy$.unsubscribe();
+   
   }
 }
