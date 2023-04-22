@@ -29,7 +29,6 @@ export class TaskService{
     toggleTask(task: TaskModel): Observable<TaskModel> {
         const url = `${this.baseUrl}/${task.id}`;
         const updatedTask = { ...task, completed: !task.completed };
-        console.log(JSON.stringify(task))
 
         return this.http.patch<TaskModel>(url, updatedTask).pipe(
             catchError(error => {
