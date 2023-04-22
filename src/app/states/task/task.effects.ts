@@ -43,6 +43,22 @@ export class TaskEffects{
         )
     })
 
+    toggleTask = createEffect(
+        () => {
+            return this._actions$.pipe(
+                ofType(TaskActions.toggleTask),
+                switchMap(({ task }) => 
+                    this._taskService.toggleTask(task).pipe(
+                        map(task => TaskActions.toggleTaskSuccess({ task })),
+                        catchError(error => {
+                            return of(TaskActions.addTaskFailure(error))
+                        })
+                   )
+                )
+            )
+        }
+    )
+
     constructor(private _actions$:Actions,private _taskService:TaskService) {
         
     }

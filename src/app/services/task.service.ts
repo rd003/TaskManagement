@@ -36,11 +36,21 @@ export class TaskService{
                 return EMPTY;
             })
         );
-     }
+    }
+    
+    toggleTask(task:TaskModel):Observable<TaskModel> {
+        task.completed = !task.completed;
+        return this.http.put<TaskModel>(this.baseUrl, task).pipe(
+            catchError(error => {
+                console.log(error);
+                return EMPTY;
+            })
+        );
+    }
     
     constructor(private http: HttpClient)
     { 
-        
+       
     }
 
 }
