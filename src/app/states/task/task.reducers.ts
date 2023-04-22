@@ -14,33 +14,48 @@ export const _initialTaskState:TaskState = {
 export const taskReducer = createReducer(
     _initialTaskState,
     on(
-        TaskActions.loadTasks,(state)=>({...state,loading:true})
+        TaskActions.loadTasks, (state) => ({ ...state, loading: true })
     ),
 
     on(
         TaskActions.loadTasksSuccess, (state, { tasks }) => ({
-            ...state,tasks,loading:false
+            ...state, tasks, loading: false
         })
     ),
     on(
         TaskActions.loadTasksFailure, (state, { error }) => ({
-           ...state,loading:false,error
-       })   
+            ...state, loading: false, error
+        })
     ),
     on(
         TaskActions.addTask, (state, { task }) => (
-            {...state,loading:true}
+            { ...state, loading: true }
         )
     ),
     on(
         TaskActions.addTaskSuccess, (state, { task }) => (
-             { ...state,tasks:[...state.tasks,task] , loading: false }
+            { ...state, tasks: [...state.tasks, task], loading: false }
         )
     ),
     on(
         TaskActions.addTaskFailure, (state, { error }) => (
-            {...state,error,loading:false}
+            { ...state, error, loading: false }
         )
-    )
+    ),
+    on(TaskActions.toggleTask, (state, { task }) => ({ ...state, loading: true })),
+    
+    on(TaskActions.toggleTaskSuccess, (state, { task }) => {
+        const updatedTasks = state.tasks.map(a=>{
+            if(a.id===task.id)
+              return task;
+            else
+              return a;
+          }
+          );
+          return {...state,loading:false,tasks:updatedTasks}
+    }
+    ),
+
+    on(TaskActions.toggleTaskFailure, (state, { error }) => ({...state,loading:false,error}))
  
 );

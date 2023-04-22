@@ -13,6 +13,6 @@ export const TaskActions = createActionGroup({
         'Add Task Failure': props<{ error: HttpErrorResponse }>(),
         'Toggle Task': props<{task:TaskModel}>(),
         'Toggle Task Success': props<{task:TaskModel}>(),
-        'Toggle Task Failure': props<{task:TaskModel}>(),
+        'Toggle Task Failure': props<{error:HttpErrorResponse}>(),
     }
 })
