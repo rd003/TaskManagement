@@ -8,18 +8,6 @@ import { TaskListModel, TaskModel } from "../models/task.model";
 export class TaskService{
     private baseUrl = `${environment.baseUrl}/task/records`;
 
-    // getTasks(taskCategoryId: string) {
-    //     if (!taskCategoryId)
-    //         return EMPTY;
-    //     const url = `${this.baseUrl}?filter=(task_category_id='${taskCategoryId}')`;
-    //     return this.http.get<TaskListModel>(url).pipe(
-    //         catchError(error => {
-    //             console.log(error);
-    //             return EMPTY;
-    //         })
-    //     );
-    // }
-
      getTasks() {
         return this.http.get<TaskListModel>(this.baseUrl).pipe(
             catchError(error => {
@@ -38,9 +26,12 @@ export class TaskService{
         );
     }
     
-    toggleTask(task:TaskModel):Observable<TaskModel> {
+    toggleTask(task: TaskModel): Observable<TaskModel> {
+        const url = `${this.baseUrl}/${task.id}`;
         const updatedTask = { ...task, completed: !task.completed };
-        return this.http.put<TaskModel>(this.baseUrl, updatedTask).pipe(
+        console.log(JSON.stringify(task))
+
+        return this.http.patch<TaskModel>(url, updatedTask).pipe(
             catchError(error => {
                 console.log({'💩💩': error });
                 return throwError(()=>error);

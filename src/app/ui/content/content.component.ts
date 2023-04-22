@@ -11,9 +11,8 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 @Component({
   selector: 'app-content',
   template: `
-       <span>{{loading$|async}}</span>
     <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async,selectedCategory:selectedCategory$|async} as data">
-     <!-- container for tasks --> <span>{{data.loading}}</span>
+     <!-- container for tasks -->
      <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
 
       <div class="my-4  flex-grow overflow-y-auto" [ngClass]="{'flex items-center justify-center':data.loading}">
