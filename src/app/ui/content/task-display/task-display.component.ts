@@ -16,7 +16,12 @@ import { TaskModel } from 'src/app/models/task.model';
                </div>
            </div>
 
-           <button *ngIf="showToggleCompletedButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="toggleCompletedTasks()">Show completed tasks</button>
+           <button *ngIf="showToggleCompletedButton" class="bg-gray-200 hover:bg-white text-black py-1 px-2 rounded flext space-x-1" (click)="toggleCompletedTasks()">
+           <i  [ngClass]="{'fas fa-caret-up':showCompletedTasks,'fas fa-caret-down':!showCompletedTasks}"></i>
+          
+            <span>Completed</span>
+            <span class="font-semibold"> {{completedTasks.length}} </span>
+            </button>
            <ng-container *ngIf="showCompletedTasks">
                <div class="py-3 px-4 my-1 bg-gray-200 rounded-lg flex" 
                 *ngFor="let task of completedTasks">
@@ -44,17 +49,17 @@ export class TaskDisplayComponent implements AfterViewInit {
    pendingTasks!:ReadonlyArray<TaskModel>;
    completedTasks!:ReadonlyArray<TaskModel>;
    showCompletedTasks = false;
+   showToggleCompletedButton!: boolean;
 
    toggleCompletedTasks() {
       this.showCompletedTasks = !this.showCompletedTasks;
    }
-   showToggleCompletedButton!: boolean;
-
+  
    ngAfterViewInit(): void {
      setTimeout(() => {
       this.pendingTasks = this.tasks.filter(a => !a.completed);
       this.completedTasks = this.tasks.filter(a => a.completed);
-      this.showToggleCompletedButton = this.completedTasks.length > 0;   
+      this.showToggleCompletedButton = this.completedTasks.length > 0;
      }, 300);
    }
    
