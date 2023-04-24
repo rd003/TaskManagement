@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import {  Observable, tap } from 'rxjs';
+import {  Observable, map, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
 import { TaskModel } from 'src/app/models/task.model';
 import { AppState } from 'src/app/states/app-state';
@@ -11,7 +11,14 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 @Component({
   selector: 'app-content',
   template: `
-    <ng-container *ngIf="{loading:loading$|async,tasks:tasks$|async,selectedCategory:selectedCategory$|async} as data">
+    <ng-container *ngIf="{
+      loading:loading$|async,
+      tasks:tasks$|async,
+      pendingTasks:pendingTasks$|async,
+      completedTasks:completedTasks$|async,
+      selectedCategory:selectedCategory$|async
+    }
+       as data">
      <!-- container for tasks -->
      <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
 
@@ -19,9 +26,22 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 
          <button *ngIf="data.loading" class="btn btn-square loading"></button>
 
-         <!-- card containing taks start -->
+         <!-- load pending tasks -->
          <app-task-display *ngIf="!data.loading" 
-         [tasks]="data.tasks??[]"
+         [tasks]="data.pendingTasks??[]"
+         (toggleTaskEvent)="toggleTask($event)"
+         >
+         </app-task-display>
+
+         <button *ngIf="data.completedTasks && data.completedTasks.length>0" class="bg-gray-200 hover:bg-white text-black py-1 px-2 rounded flext space-x-1" (click)="toggleCompletedTasks()">
+           <i class="fas" [ngClass]="{'fa-caret-down':showCompletedTasks,'fa-caret-up':!showCompletedTasks}"></i>
+          
+            <span>Completed</span>
+            <span class="font-semibold"> {{data.completedTasks.length}} </span>
+        </button>
+         <!-- load completed tasks -->
+         <app-task-display *ngIf="showCompletedTasks && !data.loading" 
+         [tasks]="data.completedTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
          >
 
@@ -44,14 +64,21 @@ import * as TaskSelectors from '../../states/task/task.selectors'
 })
 export class ContentComponent implements OnInit,OnDestroy {
   tasks$!: Observable<ReadonlyArray<TaskModel>>; 
+  pendingTasks$!: Observable<ReadonlyArray<TaskModel>>;
+  completedTasks$!: Observable<ReadonlyArray<TaskModel>>;
   loading$!: Observable<boolean>;
   error$!: Observable<HttpErrorResponse | null>;
   selectedCategory$!: Observable<TaskCategory | null>;
+  showCompletedTasks = false;
   // destroy$: Subject<boolean> = new Subject<boolean>();
 
   toggleTask(task: TaskModel) {
     this._store.dispatch(TaskActions.toggleTask({ task }))
   }
+
+  toggleCompletedTasks() {
+      this.showCompletedTasks = !this.showCompletedTasks;
+   }
 
   
   constructor(private _store:Store<AppState>) {
@@ -60,6 +87,12 @@ export class ContentComponent implements OnInit,OnDestroy {
   
   ngOnInit(): void {
     this.tasks$ = this._store.select(TaskSelectors.selectTasksBySelectedCategory);
+    this.pendingTasks$ = this.tasks$.pipe(
+      map(a => a.filter(a => a.completed === false))
+    );
+    this.completedTasks$ = this.tasks$.pipe(
+      map(a => a.filter(a => a.completed === true))
+    );
     this.loading$ = this._store.pipe(
       select(state => state.tasksState.loading));
     this.error$ = this._store.pipe(
