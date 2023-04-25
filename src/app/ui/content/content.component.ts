@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import {  Observable, map, tap } from 'rxjs';
+import {  Observable, distinct, map, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
 import { TaskModel } from 'src/app/models/task.model';
 import { AppState } from 'src/app/states/app-state';
@@ -80,7 +80,7 @@ export class ContentComponent implements OnInit,OnDestroy {
   }
 
   toggleMarkImportant(task: TaskModel) {
-    const updatedTask = { ...task, isImportant: !task.isImortarant };
+    const updatedTask = { ...task, isImportant: !task.isImportant };
     this._store.dispatch(TaskActions.updateTask({ task: updatedTask }));
   }
 
@@ -95,6 +95,7 @@ export class ContentComponent implements OnInit,OnDestroy {
   
   ngOnInit(): void {
     this.tasks$ = this._store.select(TaskSelectors.selectTasksBySelectedCategory);
+    
     this.pendingTasks$ = this.tasks$.pipe(
       map(a => a.filter(a => a.completed === false))
     );
@@ -109,9 +110,7 @@ export class ContentComponent implements OnInit,OnDestroy {
       select(state => state.taskCategories.selectedTaskCategory)
     )
     this._store.dispatch(TaskActions.loadTasks());
-    // how to use map operator in rxjs
-    // convert and log values, like {title,isimportant} order order by important
-    this.tasks$.pipe(map(tasks=> tasks.map(task=>{task.title,task.isImortarant})))
+    
   }
 
   

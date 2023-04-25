@@ -9,10 +9,10 @@ import { TaskModel } from 'src/app/models/task.model';
                   <input type="radio" (click)="toggleTaskEvent.emit(task)" class="radio"/>
                </div>  
                <div class="task-container" [ngClass]="{'line-through':task.completed}">
-                  {{task.title}}
+                  {{task.title}} 
                </div>   
                <div class="star-container ml-auto">
-                   <i class="fa-star cursor-pointer" [ngClass]="{'fa-solid':task.isImortarant,'fa-regular':!task.isImortarant}" (click)="toggleMarkImportant.emit(task)"></i>
+                   <i class="fa-star cursor-pointer" [ngClass]="{'fa-solid':task.isImportant,'fa-regular':!task.isImportant}" (click)="toggleMarkImportant.emit(task)"></i>
                </div>
            </div>
   `,
