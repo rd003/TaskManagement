@@ -26,11 +26,9 @@ export class TaskService{
         );
     }
     
-    toggleTask(task: TaskModel): Observable<TaskModel> {
+    updateTask(task: TaskModel): Observable<TaskModel> {
         const url = `${this.baseUrl}/${task.id}`;
-        const updatedTask = { ...task, completed: !task.completed };
-
-        return this.http.patch<TaskModel>(url, updatedTask).pipe(
+        return this.http.patch<TaskModel>(url, task).pipe(
             catchError(error => {
                 console.log({'💩💩': error });
                 return throwError(()=>error);

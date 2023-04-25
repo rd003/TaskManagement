@@ -43,15 +43,15 @@ export class TaskEffects{
         )
     });
 
-    toggleTask = createEffect(
+    updateTask = createEffect(
         () => {
             return this._actions$.pipe(
-                ofType(TaskActions.toggleTask),
+                ofType(TaskActions.updateTask),
                 switchMap(({ task }) =>
-                    this._taskService.toggleTask(task).pipe(
-                        map(task => TaskActions.toggleTaskSuccess({ task })),
+                    this._taskService.updateTask(task).pipe(
+                        map(task => TaskActions.updateTaskSuccess({ task })),
                         catchError(error => {
-                            return of(TaskActions.toggleTaskFailure(error))
+                            return of(TaskActions.updateTaskFailure(error))
                         })
                     )
                 )

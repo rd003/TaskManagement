@@ -30,6 +30,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          <app-task-display *ngIf="!data.loading" 
          [tasks]="data.pendingTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
+         (toggleMarkImportant)="toggleMarkImportant($event)"
          >
          </app-task-display>
 
@@ -43,6 +44,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          <app-task-display *ngIf="showCompletedTasks && !data.loading" 
          [tasks]="data.completedTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
+         (toggleMarkImportant)="toggleMarkImportant($event)"
          >
 
          </app-task-display>
@@ -73,7 +75,13 @@ export class ContentComponent implements OnInit,OnDestroy {
   // destroy$: Subject<boolean> = new Subject<boolean>();
 
   toggleTask(task: TaskModel) {
-    this._store.dispatch(TaskActions.toggleTask({ task }))
+    const updatedTask = { ...task, completed: !task.completed };
+    this._store.dispatch(TaskActions.updateTask({ task: updatedTask }));
+  }
+
+  toggleMarkImportant(task: TaskModel) {
+    const updatedTask = { ...task, isImportant: !task.isImortarant };
+    this._store.dispatch(TaskActions.updateTask({ task: updatedTask }));
   }
 
   toggleCompletedTasks() {
@@ -101,6 +109,9 @@ export class ContentComponent implements OnInit,OnDestroy {
       select(state => state.taskCategories.selectedTaskCategory)
     )
     this._store.dispatch(TaskActions.loadTasks());
+    // how to use map operator in rxjs
+    // convert and log values, like {title,isimportant} order order by important
+    this.tasks$.pipe(map(tasks=> tasks.map(task=>{task.title,task.isImortarant})))
   }
 
   

@@ -12,7 +12,7 @@ import { TaskModel } from 'src/app/models/task.model';
                   {{task.title}}
                </div>   
                <div class="star-container ml-auto">
-                   <i class="fa-regular fa-star"></i>
+                   <i class="fa-star cursor-pointer" [ngClass]="{'fa-solid':task.isImortarant,'fa-regular':!task.isImortarant}" (click)="toggleMarkImportant.emit(task)"></i>
                </div>
            </div>
   `,
@@ -23,5 +23,6 @@ export class TaskDisplayComponent {
   
    @Input() tasks!: ReadonlyArray<TaskModel>;
    @Output() toggleTaskEvent = new EventEmitter<TaskModel>();
+   @Output() toggleMarkImportant = new EventEmitter<TaskModel>();
 
 }

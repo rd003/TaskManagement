@@ -11,8 +11,8 @@ export const TaskActions = createActionGroup({
         'Add Task': props<{ task: TaskModel }>(),
         'Add Task Success': props<{ task: TaskModel }>(),
         'Add Task Failure': props<{ error: HttpErrorResponse }>(),
-        'Toggle Task': props<{task:TaskModel}>(),
-        'Toggle Task Success': props<{task:TaskModel}>(),
-        'Toggle Task Failure': props<{error:HttpErrorResponse}>(),
+        'Update Task': props<{task:TaskModel}>(),
+        'Update Task Success': props<{task:TaskModel}>(),
+        'Update Task Failure': props<{error:HttpErrorResponse}>(),
     }
 })
