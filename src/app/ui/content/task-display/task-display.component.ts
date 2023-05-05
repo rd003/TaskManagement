@@ -12,8 +12,8 @@ import { TaskModel } from 'src/app/models/task.model';
                    <div>
                      {{task.title}} 
                    </div>
-                   <div *ngIf="displayCategory">
-                      category
+                   <div *ngIf="displayCategory" class="font-semibold">
+                      {{task.categoryName}}
                    </div>
                </div>   
                <div class="star-container ml-auto">
@@ -29,6 +29,8 @@ export class TaskDisplayComponent {
    @Input() tasks!: ReadonlyArray<TaskModel>;
    @Output() toggleTaskEvent = new EventEmitter<TaskModel>();
    @Output() toggleMarkImportant = new EventEmitter<TaskModel>();
-   @Input() displayCategory = true;
+   
+   @Input() displayCategory = false;
+   //abc
 
 }

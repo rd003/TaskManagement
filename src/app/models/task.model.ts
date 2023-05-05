@@ -11,7 +11,8 @@ export interface TaskModel extends CollectionMetadata {
     repeat_interval:     number;
     last_completed_date: string;
     reminder_date:       string;
-    isImportant:        boolean;
+    isImportant: boolean;
+    categoryName: string;
 }
 
 export interface TaskListModel extends PaginationMetadata{

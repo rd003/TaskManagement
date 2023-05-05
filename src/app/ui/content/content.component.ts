@@ -31,6 +31,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          [tasks]="data.pendingTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
+         [displayCategory]="data.selectedCategory?.title==='Important'"
          >
          </app-task-display>
 
@@ -45,6 +46,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          [tasks]="data.completedTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
+         [displayCategory]="data.selectedCategory?.title==='Important'"
          >
 
          </app-task-display>
@@ -110,6 +112,8 @@ export class ContentComponent implements OnInit,OnDestroy {
       select(state => state.taskCategories.selectedTaskCategory)
     )
     this._store.dispatch(TaskActions.loadTasks());
+
+      
     
   }
 

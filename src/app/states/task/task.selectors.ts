@@ -20,13 +20,30 @@ export const error = createSelector(
     (state)=>state.error
 )
 
+// tasks with category
+
+export const tasksWithCategory = createSelector(
+    tasks,
+    TaskCategorySelectors.selectTaskCategories,
+    (tasks, taskCategories) => {
+        const taskWithCat:ReadonlyArray<TaskModel>=tasks.map(task => {
+            const category = taskCategories.find(a => a.id === task.task_category_id);
+            return {
+                ...task,
+                categoryName: category ? category.title :""
+            };
+        });
+        return taskWithCat;
+    }
+)
+
 // if selected category is "Important" then return important task, otherwise return tasks
 // releated to selected category
 export const selectTasksBySelectedCategory = createSelector(
-    taskFeatureState,
+    tasksWithCategory,
     TaskCategoryActions.selectedTaskCategory,
     (taskState, selectedCategory) => {
-        const tasks: readonly TaskModel[] = taskState.tasks;
+        const tasks: readonly TaskModel[] = taskState;
         if (selectedCategory?.title === "Important") {
             return tasks.filter(a => a.isImportant);
         }
