@@ -3,13 +3,15 @@ import { CommonFields } from "../util/common-fields";
 import { TaskModel } from "src/app/models/task.model";
 import { TaskActions } from "./task.actions";
 export interface TaskState extends CommonFields {
-    tasks:ReadonlyArray<TaskModel>
+    tasks: ReadonlyArray<TaskModel>,
+    searchQuery:string
 }
 
 export const _initialTaskState:TaskState = {
     tasks: [],
     loading: false,
-    error: null
+    error: null,
+    searchQuery:""
 }
 export const taskReducer = createReducer(
     _initialTaskState,
@@ -60,6 +62,17 @@ export const taskReducer = createReducer(
 
     on(TaskActions.updateTaskFailure, (state, { error }) =>
         ( { ...state, loading: false, error })
+    ),
+    on(TaskActions.setSearchQuery, (state, { searchQuery }) =>
+    {
+        if (!searchQuery) 
+          return {...state, searchQuery};
+        const query = searchQuery.toLowerCase();
+        const filteredTasks= state.tasks.filter(task => 
+        task.title.toLowerCase().includes(query)
+        );
+       return {...state,tasks:filteredTasks, searchQuery}
+     }
     )
  
 );

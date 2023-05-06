@@ -5,6 +5,7 @@ import { TaskModel } from "src/app/models/task.model";
 import * as TaskCategorySelectors from '../task-category/task-category.selectors'
 export const taskFeatureState = createFeatureSelector<TaskState>('tasksState');
 
+
 export const tasks = createSelector(
     taskFeatureState,
     (state)=>state.tasks
@@ -57,7 +58,6 @@ export const selectTasksBySelectedCategory = createSelector(
 )
 
 
-
 // return taskCategory with pending task count
 export const selectTaskCategoriesWithCount = createSelector(
     TaskCategorySelectors.selectTaskCategories,
@@ -88,6 +88,42 @@ export const selectTaskCategoriesWithCount = createSelector(
         return categoriesWithCount;
     }
 )
+
+export const selectSearchQuery = createSelector(
+    taskFeatureState,
+    (state)=>state.searchQuery
+)
+
+// select task by search query
+// export const selectTasksBySearchQuery = createSelector(
+//     selectTasksBySelectedCategory,
+//     selectSearchQuery,
+//     (tasks, searchQuery) => {
+//       console.log('select task by search query called')
+//       if (!searchQuery) 
+//         return tasks;
+//       const query = searchQuery.toLowerCase();
+//       const filteredTasks= tasks.filter(task => 
+//         task.title.toLowerCase().includes(query)
+//         );
+//      // console.log(filteredTasks);
+//       return filteredTasks;
+//     }
+//   );
+  
+//   export const selectTasksBySearchQuery = (searchQuery:string) =>createSelector(
+//     selectTasksBySelectedCategory,
+//     (tasks) => {
+//       if (!searchQuery) 
+//         return tasks;
+//       const query = searchQuery.toLowerCase();
+//       const filteredTasks= tasks.filter(task => 
+//         task.title.toLowerCase().includes(query)
+//         );
+//       console.log(filteredTasks);
+//       return filteredTasks;
+//     }
+//   );
 
 
 

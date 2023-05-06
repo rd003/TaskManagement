@@ -13,6 +13,7 @@ export const TaskActions = createActionGroup({
         'Add Task Failure': props<{ error: HttpErrorResponse }>(),
         'Update Task': props<{task:TaskModel}>(),
         'Update Task Success': props<{task:TaskModel}>(),
-        'Update Task Failure': props<{error:HttpErrorResponse}>(),
+        'Update Task Failure': props<{ error: HttpErrorResponse }>(),
+        'Set Search Query': props<{ searchQuery: string }>()
     }
 })
