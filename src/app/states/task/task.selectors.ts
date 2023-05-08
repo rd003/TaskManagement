@@ -111,19 +111,18 @@ export const selectSearchQuery = createSelector(
 //     }
 //   );
   
-//   export const selectTasksBySearchQuery = (searchQuery:string) =>createSelector(
-//     selectTasksBySelectedCategory,
-//     (tasks) => {
-//       if (!searchQuery) 
-//         return tasks;
-//       const query = searchQuery.toLowerCase();
-//       const filteredTasks= tasks.filter(task => 
-//         task.title.toLowerCase().includes(query)
-//         );
-//       console.log(filteredTasks);
-//       return filteredTasks;
-//     }
-//   );
+  export const selectTasksBySearchQuery = (searchQuery:string) =>createSelector(
+    tasksWithCategory,
+    (tasks) => {
+      if (!searchQuery) 
+        return tasks;
+      const query = searchQuery.toLowerCase();
+      const filteredTasks= tasks.filter(task => 
+        task.title.toLowerCase().includes(query)
+        );
+      return filteredTasks;
+    }
+  );
 
 
 

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import {  Observable, distinct, map, tap } from 'rxjs';
+import {  Observable, Subject, combineLatestWith, distinct, map, mergeMap, startWith, switchMap, takeUntil, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
 import { TaskModel } from 'src/app/models/task.model';
 import { AppState } from 'src/app/states/app-state';
@@ -16,11 +16,14 @@ import * as TaskSelectors from '../../states/task/task.selectors'
       tasks:tasks$|async,
       pendingTasks:pendingTasks$|async,
       completedTasks:completedTasks$|async,
-      selectedCategory:selectedCategory$|async
+      selectedCategory:selectedCategory$|async,
+      searchTerm:searchTerm$|async
     }
        as data">
      <!-- container for tasks -->
-     <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
+      <ng-container *ngIf="!data.searchTerm">
+         <app-page-heading [heading]="data.selectedCategory?.title??''"></app-page-heading>
+      </ng-container>
 
       <div class="my-4  flex-grow overflow-y-auto" [ngClass]="{'flex items-center justify-center':data.loading}">
 
@@ -31,7 +34,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          [tasks]="data.pendingTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
-         [displayCategory]="data.selectedCategory?.title==='Important'"
+         [displayCategory]="displayCategory"
          >
          </app-task-display>
 
@@ -46,7 +49,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          [tasks]="data.completedTasks??[]"
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
-         [displayCategory]="data.selectedCategory?.title==='Important'"
+         [displayCategory]="displayCategory"
          >
 
          </app-task-display>
@@ -66,7 +69,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
   styles: [
   ]
 })
-export class ContentComponent implements OnInit,OnDestroy {
+export class ContentComponent implements OnInit, OnDestroy {
   tasks$!: Observable<ReadonlyArray<TaskModel>>; 
   pendingTasks$!: Observable<ReadonlyArray<TaskModel>>;
   completedTasks$!: Observable<ReadonlyArray<TaskModel>>;
@@ -74,7 +77,9 @@ export class ContentComponent implements OnInit,OnDestroy {
   error$!: Observable<HttpErrorResponse | null>;
   selectedCategory$!: Observable<TaskCategory | null>;
   showCompletedTasks = false;
-  // destroy$: Subject<boolean> = new Subject<boolean>();
+  searchTerm$!: Observable<string>;
+  displayCategory = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   toggleTask(task: TaskModel) {
     const updatedTask = { ...task, completed: !task.completed };
@@ -96,7 +101,21 @@ export class ContentComponent implements OnInit,OnDestroy {
   }
   
   ngOnInit(): void {
-    this.tasks$ = this._store.select(TaskSelectors.selectTasksBySelectedCategory);
+    this.searchTerm$ = this._store.select(TaskSelectors.selectSearchQuery).pipe(
+      startWith('')
+    );
+    
+    this.tasks$= this.searchTerm$.pipe(
+      switchMap((searchTerm) => {
+        if (searchTerm.length === 0) 
+           return this._store.select(TaskSelectors.selectTasksBySelectedCategory);
+        else 
+           return this._store.select(TaskSelectors.selectTasksBySearchQuery(searchTerm));
+        
+      })
+    );
+
+
     
     this.pendingTasks$ = this.tasks$.pipe(
       map(a => a.filter(a => a.completed === false))
@@ -111,14 +130,23 @@ export class ContentComponent implements OnInit,OnDestroy {
     this.selectedCategory$ = this._store.pipe(
       select(state => state.taskCategories.selectedTaskCategory)
     )
-    this._store.dispatch(TaskActions.loadTasks());
-
-      
     
+    this.selectedCategory$.pipe(
+      combineLatestWith(this.searchTerm$),
+      tap(([selectedTaskCategory, searchTerm]) => {
+        if (selectedTaskCategory?.title === "Important" || searchTerm)
+          this.displayCategory = true;
+        else
+          this.displayCategory = false;
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+
+    this._store.dispatch(TaskActions.loadTasks());
   }
 
-  
   ngOnDestroy(){
-   
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

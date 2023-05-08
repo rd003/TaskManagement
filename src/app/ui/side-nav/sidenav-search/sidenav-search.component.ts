@@ -29,9 +29,9 @@ export class SidenavSearchComponent implements OnInit,OnDestroy {
     this.searchInput.valueChanges
       .pipe(
         tap(val => {
-          if (!val) return
+         // if (!val) return
           //this._store.select(TaskSelectors.selectTasksBySearchQuery(val)).subscribe()
-          this._store.dispatch(TaskActions.setSearchQuery({ searchQuery: val }));
+          this._store.dispatch(TaskActions.setSearchQuery({ searchQuery: val ?? "" }));
         }),
         takeUntil(this.destroy$)
       )

@@ -65,13 +65,7 @@ export const taskReducer = createReducer(
     ),
     on(TaskActions.setSearchQuery, (state, { searchQuery }) =>
     {
-        if (!searchQuery) 
-          return {...state, searchQuery};
-        const query = searchQuery.toLowerCase();
-        const filteredTasks= state.tasks.filter(task => 
-        task.title.toLowerCase().includes(query)
-        );
-       return {...state,tasks:filteredTasks, searchQuery}
+       return {...state, searchQuery}
      }
     )
  
