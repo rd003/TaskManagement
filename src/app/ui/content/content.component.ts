@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {  Observable, Subject, combineLatestWith, distinct, map, mergeMap, startWith, switchMap, takeUntil, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
@@ -35,6 +35,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
          [displayCategory]="displayCategory"
+         (selectedTask)="OnSelectedTaskEvent.emit($event)"
          >
          </app-task-display>
 
@@ -50,6 +51,7 @@ import * as TaskSelectors from '../../states/task/task.selectors'
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
          [displayCategory]="displayCategory"
+         (selectedTask)="OnSelectedTaskEvent.emit($event)"
          >
 
          </app-task-display>
@@ -80,6 +82,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   searchTerm$!: Observable<string>;
   displayCategory = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  @Output() OnSelectedTaskEvent = new EventEmitter<TaskModel>();
+
+  
 
   toggleTask(task: TaskModel) {
     const updatedTask = { ...task, completed: !task.completed };

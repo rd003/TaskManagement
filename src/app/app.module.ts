@@ -28,6 +28,7 @@ import { InputFieldComponent } from './ui/content/add-task/input-field/input-fie
 import { RightButtonsComponent } from './ui/content/add-task/right-buttons/right-buttons.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownMenuComponent } from './ui/util/dropdown-menu/dropdown-menu.component';
+import { EditModalComponent } from './ui/edit-modal/edit-modal.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { DropdownMenuComponent } from './ui/util/dropdown-menu/dropdown-menu.com
     PlusIconComponent,
     InputFieldComponent,
     RightButtonsComponent,
-    DropdownMenuComponent
+    DropdownMenuComponent,
+    EditModalComponent
   ],
   imports: [
     BrowserModule,
