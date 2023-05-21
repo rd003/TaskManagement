@@ -12,21 +12,17 @@ import { TaskModel } from 'src/app/models/task.model';
           <rect y="60" width="100" height="16" fill="#808080"></rect>
         </svg>
        </button>
-    <div class="flex relative">
-         <app-side-nav [hideSideNav]="hideSidenav"></app-side-nav>
-         <app-content (OnSelectedTaskEvent)="onSelectedTask($event)" class="px-10 py-7  h-screen bg-gradient-to-r from-pink-400 to-pink-800 flex-1 flex flex-col"></app-content>
-         <app-edit-modal 
-         (closePopupEvent)="closePopup()"
-         [task]="selectedTask"
-         [showPopup]="showPopup"
-         >
+       <div class="flex relative">
+            <app-side-nav [hideSideNav]="hideSidenav"></app-side-nav>
+            <app-content (OnSelectedTaskEvent)="onSelectedTask($event)" class="px-10 py-7  h-screen bg-gradient-to-r from-pink-400 to-pink-800 flex-1 flex flex-col"></app-content>
+            <app-edit-modal 
+            (closePopupEvent)="closePopup()"
+            [task]="selectedTask"
+            [showPopup]="showPopup"
+            >
 
-         </app-edit-modal>
-       
-         
-
-  
-  </div>
+            </app-edit-modal>
+       </div>
 
   `,
   styles: [
@@ -34,7 +30,7 @@ import { TaskModel } from 'src/app/models/task.model';
 })
 export class MainLayoutComponent {
   hideSidenav = true;
-  showPopup = true;
+  showPopup = false;
   selectedTask!: TaskModel;
   toggleSidenav() {
     this.hideSidenav = !this.hideSidenav;

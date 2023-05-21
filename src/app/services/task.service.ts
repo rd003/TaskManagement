@@ -27,6 +27,7 @@ export class TaskService{
     }
     
     updateTask(task: TaskModel): Observable<TaskModel> {
+        console.log(task)
         const url = `${this.baseUrl}/${task.id}`;
         return this.http.patch<TaskModel>(url, task).pipe(
             catchError(error => {

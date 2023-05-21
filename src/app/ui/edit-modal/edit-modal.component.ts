@@ -1,5 +1,9 @@
-import { Component,Input,Output,EventEmitter } from '@angular/core';
+import { Component,Input,Output,EventEmitter, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Subject, debounceTime, takeUntil, tap } from 'rxjs';
 import { TaskModel } from 'src/app/models/task.model';
+import { TaskActions } from 'src/app/states/task/task.actions';
 
 @Component({
   selector: 'app-edit-modal',
@@ -9,13 +13,15 @@ import { TaskModel } from 'src/app/models/task.model';
          <button (click)="closePopupEvent.emit()" class=" text-gray-600 p-2  hover:text-gray-800 absolute top-0 right-0">
            X
          </button>
-
+          
          <!-- form -->
-         <!-- <div *ngIf="task" class="flex-col"> -->
+          <form  [formGroup]="frm">
          <div  class="flex-col absolute w-full mt-6 p-3 space-y-2 ">
-             <!-- column 1 -->
+             <!-- column 1 -->          
              <div>
-                 <input type="text" placeholder="Title" class="p-2 border-[1px] rounded-sm border-gray-600 text-lg font-bold outline-0 py-3 px-5 w-full" >
+                 <input  type="text" formControlName="title" placeholder="Title"
+                 [ngClass]="{'border-red-500':controls['title']['invalid'] && (controls['title']['dirty'] || controls['title']['touched'])}"
+                  class="p-2 border-[1px] rounded-sm border-gray-600 text-lg font-bold outline-0 py-3 px-5 w-full" >
              </div>
 
               <!-- column 2 -->
@@ -69,17 +75,67 @@ import { TaskModel } from 'src/app/models/task.model';
              
              <!-- column 4 -->
              <div>
-                 <textarea placeholder="Add Note" class="p-2 border-[1px] rounded-sm border-gray-600 text-sm  outline-0 py-3 px-5 w-full"></textarea>
+                 <textarea  formControlName="note" placeholder="Add Note"
+                  [ngClass]="{'border-red-500':controls['note']['invalid'] && (controls['note']['dirty'] || controls['note']['touched'])}"
+                  class="p-2 border-[1px] rounded-sm border-gray-600 text-sm  outline-0 py-3 px-5 w-full"></textarea>
              </div>
+           </div>
 
-         </div>
+        </form>
   </div>
   `,
   styles: [
   ]
 })
-export class EditModalComponent {
+export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
   @Input() showPopup!: boolean;
   @Output() closePopupEvent = new EventEmitter<void>();
   @Input() task!: TaskModel;
+  frm!: FormGroup;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  get controls() {
+    return this.frm.controls;
+  }
+
+  constructor(private fb: FormBuilder, private store:Store) {
+   
+  }
+
+  ngOnInit(): void {
+    this.frm = this.fb.group({
+      id: [''],
+      title: ['',[Validators.minLength(4),Validators.required]],
+      due_date:[''],
+      reminder_date:[''],
+      repeat_type:[''],
+      note:['',Validators.minLength(5)]
+    });
+
+    this.frm.valueChanges.pipe(
+      debounceTime(300),
+      tap(task => {
+        if (this.frm.valid) {
+          this.store.dispatch(TaskActions.updateTask({ task }));
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+ 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['task'] && this.task) {
+       this.frm.patchValue(this.task);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
+
+  // updateTask(task:TaskModel) {
+  //   console.log(task)
+  // }
+
 }
