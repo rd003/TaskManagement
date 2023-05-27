@@ -6,7 +6,7 @@ import { catchError, EMPTY, map, Observable, of } from "rxjs";
 
 @Injectable({ providedIn:'root'})
 export class TaskCategoryService{
-    private baseUrl = `${environment.baseUrl}/task_category/records`;
+    private baseUrl = `${environment.baseUrl}/collections/task_category/records`;
 
     getTaskCategories() {
         return this.http.get<TaskCategoryListModel>(this.baseUrl).pipe(

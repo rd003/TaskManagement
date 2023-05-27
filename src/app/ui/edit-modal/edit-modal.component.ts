@@ -1,8 +1,9 @@
 import { Component,Input,Output,EventEmitter, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Subject, debounceTime, takeUntil, tap } from 'rxjs';
+import { EMPTY, Subject, catchError, debounceTime, takeUntil, tap } from 'rxjs';
 import { TaskModel } from 'src/app/models/task.model';
+import { TaskAttachmentService } from 'src/app/services/task-attachment.service';
 import { TaskActions } from 'src/app/states/task/task.actions';
 
 @Component({
@@ -65,10 +66,10 @@ import { TaskActions } from 'src/app/states/task/task.actions';
                 </div>
                     
                  
-                <label for="file-upload" class=" cursor-pointer rounded-md  text-sm text-gray-600 px-2 py-2 flex space-x-1 items-center">
+                <label for="file-upload"  class=" cursor-pointer rounded-md  text-sm text-gray-600 px-2 py-2 flex space-x-1 items-center">
                   <i class="fas fa-paperclip"></i>
                   <span>Upload a file</span>
-                  <input id="file-upload" name="file-upload" type="file" class="w-0 h-0 p-0 overflow-hidden m-[-1px] whitespace-nowrap border-0 rect">
+                  <input id="file-upload" name="file-upload" (change)="onFileSelected($event)" type="file" class="w-0 h-0 p-0 overflow-hidden m-[-1px] whitespace-nowrap border-0 rect">
                 </label>
                 
              </div>
@@ -93,11 +94,13 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
   @Input() task!: TaskModel;
   frm!: FormGroup;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  selectedFile: File | null = null;
+
   get controls() {
     return this.frm.controls;
   }
 
-  constructor(private fb: FormBuilder, private store:Store) {
+  constructor(private fb: FormBuilder, private store:Store,private tas:TaskAttachmentService) {
    
   }
 
@@ -120,7 +123,15 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
       }),
       takeUntil(this.destroy$)
     ).subscribe();
- 
+    
+    this.tas.getAllAttachment().pipe(
+      tap(console.log),
+      catchError(error =>
+      {
+        console.log(error);
+        return EMPTY;
+     })
+    ).subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -137,5 +148,19 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
   // updateTask(task:TaskModel) {
   //   console.log(task)
   // }
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile == null || this.task == null)
+       return;
+    const allowedExtensions = ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'xls'];
+    const fileExtension:string = this.selectedFile?.name.split('.').pop()?.toLowerCase()??"";
+    if (!allowedExtensions.includes(fileExtension))
+      return;
+    this.tas.uploadFile(this.task.id, this.selectedFile).pipe(
+      tap(console.log),
+      catchError(error => { console.log(error); return EMPTY})
+    ).subscribe();
+  }
 
 }

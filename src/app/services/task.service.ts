@@ -6,7 +6,7 @@ import { TaskListModel, TaskModel } from "../models/task.model";
 
 @Injectable({ providedIn:'root'})
 export class TaskService{
-    private baseUrl = `${environment.baseUrl}/task/records`;
+    private baseUrl = `${environment.baseUrl}/collections/task/records`;
 
      getTasks() {
         return this.http.get<TaskListModel>(this.baseUrl).pipe(
