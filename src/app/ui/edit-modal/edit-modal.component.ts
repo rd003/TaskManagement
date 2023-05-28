@@ -2,6 +2,7 @@ import { Component,Input,Output,EventEmitter, OnInit, OnChanges, SimpleChanges, 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { EMPTY, Subject, catchError, debounceTime, takeUntil, tap } from 'rxjs';
+import { TaskAttachmentCreateModel } from 'src/app/models/task-attachment.model';
 import { TaskModel } from 'src/app/models/task.model';
 import { TaskAttachmentService } from 'src/app/services/task-attachment.service';
 import { TaskActions } from 'src/app/states/task/task.actions';
@@ -157,10 +158,11 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
     const fileExtension:string = this.selectedFile?.name.split('.').pop()?.toLowerCase()??"";
     if (!allowedExtensions.includes(fileExtension))
       return;
-    this.tas.uploadFile(this.task.id, this.selectedFile).pipe(
+    const taskReq: TaskAttachmentCreateModel = { task_id: this.task.id, file: this.selectedFile };
+    this.tas.uploadFile(taskReq).pipe(
       tap(console.log),
       catchError(error => { console.log(error); return EMPTY})
     ).subscribe();
   }
-
+  
 }

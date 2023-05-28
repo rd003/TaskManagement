@@ -2,6 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { CommonFields } from "../util/common-fields";
 import { TaskModel } from "src/app/models/task.model";
 import { TaskActions } from "./task.actions";
+
 export interface TaskState extends CommonFields {
     tasks: ReadonlyArray<TaskModel>,
     searchQuery:string

@@ -11,3 +11,8 @@ export interface TaskAttachmentModel extends CollectionMetadata{
 export interface TaskAttachmentListModel extends PaginationMetadata{
     items:TaskAttachmentModel[]
 }
+
+export interface TaskAttachmentCreateModel{
+    task_id: string,
+    file:File
+}
