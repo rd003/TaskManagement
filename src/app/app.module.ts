@@ -29,6 +29,8 @@ import { RightButtonsComponent } from './ui/content/add-task/right-buttons/right
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownMenuComponent } from './ui/util/dropdown-menu/dropdown-menu.component';
 import { EditModalComponent } from './ui/edit-modal/edit-modal.component';
+import { TaskAttachmentEffects } from './states/task-attachment/task-attachment.effects';
+import { TaskAttachmentReducer } from './states/task-attachment/task-attachment.reducers';
 
 @NgModule({
   declarations: [
@@ -59,9 +61,10 @@ import { EditModalComponent } from './ui/edit-modal/edit-modal.component';
     StoreModule.forRoot<AppState>({
       taskCategories: taskCategoriesReducer,
       tasksState: taskReducer,
-      taskCategoryLink:taskCategoryLinkReducer
+      taskCategoryLink: taskCategoryLinkReducer,
+      taskAttachments: TaskAttachmentReducer
     }),
-    EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects])
+    EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects,TaskAttachmentEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

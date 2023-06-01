@@ -8,8 +8,8 @@ import { TaskAttachmentCreateModel, TaskAttachmentListModel, TaskAttachmentModel
   providedIn: 'root'
 })
 export class TaskAttachmentService {
-  baseUrl = environment.baseUrl + '/collections/task_attachment/records';
-  fileUrl = environment.baseUrl + '/files';
+  private baseUrl = environment.baseUrl + '/collections/task_attachment/records';
+  private fileUrl = environment.baseUrl + '/files';
 
   uploadFile(taskReq:TaskAttachmentCreateModel):Observable<TaskAttachmentModel>  {
    // console.log({task_id,file})
