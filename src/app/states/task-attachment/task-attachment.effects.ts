@@ -14,23 +14,27 @@ export class TaskAttachmentEffects{
                     return this.attachmentService
                         .getAllAttachment()
                         .pipe(
-                            map(taskAttachments =>
-                            {
-                               // console.log({ 'task attachment effect':taskAttachments})
+                            map(taskAttachments => {
+                                // console.log({ 'task attachment effect':taskAttachments})
                                 return taskAttachmentActions.loadTaskAttachmentSuccess({ taskAttachments });
                             }
-                            ),  
-                            catchError(error =>
-                            {
+                            ),
+                            catchError(error => {
                                 console.log("error in task attachment effects")
-                                return of(taskAttachmentActions.loadTaskAttachmentFailure({error}));
-                             })
+                                return of(taskAttachmentActions.loadTaskAttachmentFailure({ error }));
+                            })
                         );
                 })
                 //switch map ends here
             );
            
            
+        }
+    );
+
+    addTaskAttachment = createEffect(
+        () => {
+            return this._actions$;
         }
     )
 

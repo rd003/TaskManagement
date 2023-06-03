@@ -24,6 +24,35 @@ export const TaskAttachmentReducer = createReducer(
         taskAttachmentActions.addTaskAttachmentFailure, (state, { error }) => ({
             ...state,loading:false,error
         })
+    ),
+    on(
+        taskAttachmentActions.addTaskAttachment,
+        (state) => {
+            return {
+                ...state,
+                loading: true
+            }
+        }
+    ),
+    on(
+        taskAttachmentActions.addTaskAttachmentSuccess,
+        (state, {taskAttachment }) => {
+            const newState = {
+                ...state,
+                loading: false,
+                taskAttachments: [...state.taskAttachments, taskAttachment]
+            };
+            return newState;
+        }
+    ),
+    on(
+        taskAttachmentActions.addTaskAttachmentFailure,
+        (state, { error }) =>
+        ({
+            ...state,
+            loading: false,
+            error
+        })
     )
     
         
