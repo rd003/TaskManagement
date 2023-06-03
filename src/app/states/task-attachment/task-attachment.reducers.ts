@@ -4,11 +4,11 @@ import { createReducer, on } from "@ngrx/store";
 import { taskAttachmentActions } from "./task-attachment.actions";
 
 export interface TaskAttachmentState extends CommonFields{
-    task_attachments: ReadonlyArray<TaskAttachmentModel>
+    taskAttachments: ReadonlyArray<TaskAttachmentModel>
 }
 
 const _initialState: TaskAttachmentState = {
-    task_attachments: [],
+    taskAttachments: [],
     loading:false,
     error:null,
 }

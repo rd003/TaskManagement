@@ -16,12 +16,13 @@ export class TaskAttachmentEffects{
                         .pipe(
                             map(taskAttachments =>
                             {
-                                console.log({ 'task attachment effect':taskAttachmentActions})
+                               // console.log({ 'task attachment effect':taskAttachments})
                                 return taskAttachmentActions.loadTaskAttachmentSuccess({ taskAttachments });
                             }
                             ),  
                             catchError(error =>
                             {
+                                console.log("error in task attachment effects")
                                 return of(taskAttachmentActions.loadTaskAttachmentFailure({error}));
                              })
                         );

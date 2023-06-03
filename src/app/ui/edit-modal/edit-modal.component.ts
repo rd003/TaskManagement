@@ -59,8 +59,10 @@ import { TaskActions } from 'src/app/states/task/task.actions';
 
               <!-- column 3 -->
               <div class="flex-col space-y-2 p-2 border-[1px] rounded-sm border-gray-600 ">
-                  <div class="flex items-center pl-2 rounded-sm hover:bg-gray-200 cursor-pointer">
-                    <div class="flex-grow text-sm  ml-auto">filename.ext</div>
+                  <div class="flex items-center pl-2 rounded-sm hover:bg-gray-200 cursor-pointer" *ngFor="let fileAttachment of task.taskAttachments">
+                    <div class="flex-grow text-sm ml-auto" >
+                      <a [href]="fileAttachment.file_path" target="_blank">{{fileAttachment.attachment}}</a>
+                    </div>
                     <button class="h-full border-0 hover:bg-gray-300 py-1 px-2 self-center">
                       X
                     </button>
@@ -125,14 +127,15 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe();
     
-    this.tas.getAllAttachment().pipe(
-      tap(console.log),
-      catchError(error =>
-      {
-        console.log(error);
-        return EMPTY;
-     })
-    ).subscribe();
+    // this.tas.getAllAttachment().pipe(
+    //   tap(console.log),
+    //   catchError(error =>
+    //   {
+    //     console.log(error);
+    //     return EMPTY;
+    //  })
+    // ).subscribe();
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

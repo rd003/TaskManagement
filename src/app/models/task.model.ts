@@ -1,5 +1,6 @@
 import { CollectionMetadata } from "./collection-metadata";
 import { PaginationMetadata } from "./pagination-metadata";
+import { TaskAttachmentModel } from "./task-attachment.model";
 
 export interface TaskModel extends CollectionMetadata {
     title:               string;
@@ -13,6 +14,7 @@ export interface TaskModel extends CollectionMetadata {
     reminder_date:       string;
     isImportant: boolean;
     categoryName: string;
+    taskAttachments?: TaskAttachmentModel[]
 }
 
 export interface TaskListModel extends PaginationMetadata{

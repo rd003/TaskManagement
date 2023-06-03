@@ -7,6 +7,7 @@ import { TaskModel } from 'src/app/models/task.model';
 import { AppState } from 'src/app/states/app-state';
 import { TaskActions } from 'src/app/states/task/task.actions';
 import * as TaskSelectors from '../../states/task/task.selectors'
+import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attachment.actions';
 
 @Component({
   selector: 'app-content',
@@ -84,8 +85,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
   @Output() OnSelectedTaskEvent = new EventEmitter<TaskModel>();
 
-  
-
   toggleTask(task: TaskModel) {
     const updatedTask = { ...task, completed: !task.completed };
     this._store.dispatch(TaskActions.updateTask({ task: updatedTask }));
@@ -110,17 +109,18 @@ export class ContentComponent implements OnInit, OnDestroy {
       startWith('')
     );
     
-    this.tasks$= this.searchTerm$.pipe(
+    this.tasks$ = this.searchTerm$.pipe(
       switchMap((searchTerm) => {
-        if (searchTerm.length === 0) 
-           return this._store.select(TaskSelectors.selectTasksBySelectedCategory);
-        else 
-           return this._store.select(TaskSelectors.selectTasksBySearchQuery(searchTerm));
+        if (searchTerm.length === 0)
+          return this._store.select(TaskSelectors.selectTasksBySelectedCategory);
+        else
+          return this._store.select(TaskSelectors.selectTasksBySearchQuery(searchTerm));
         
       })
     );
 
-
+   // load task attachments
+    this._store.dispatch(taskAttachmentActions.loadTaskAttachment());
     
     this.pendingTasks$ = this.tasks$.pipe(
       map(a => a.filter(a => a.completed === false))

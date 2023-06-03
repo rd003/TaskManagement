@@ -3,8 +3,9 @@ import { TaskState } from "./task.reducers";
 import * as TaskCategoryActions from "../task-category/task-category.selectors";
 import { TaskModel } from "src/app/models/task.model";
 import * as TaskCategorySelectors from '../task-category/task-category.selectors'
-export const taskFeatureState = createFeatureSelector<TaskState>('tasksState');
+import * as TaskAttachmentsSelectors from '../task-attachment/task-attachment.selectors'
 
+export const taskFeatureState = createFeatureSelector<TaskState>('tasksState');
 
 export const tasks = createSelector(
     taskFeatureState,
@@ -26,7 +27,8 @@ export const error = createSelector(
 export const tasksWithCategory = createSelector(
     tasks,
     TaskCategorySelectors.selectTaskCategories,
-    (tasks, taskCategories) => {
+    TaskAttachmentsSelectors.selectTaskAttachments,
+    (tasks, taskCategories,taskAttachments) => {
         const taskWithCat:ReadonlyArray<TaskModel>=tasks.map(task => {
             const category = taskCategories.find(a => a.id === task.task_category_id);
             return {
@@ -34,7 +36,18 @@ export const tasksWithCategory = createSelector(
                 categoryName: category ? category.title :""
             };
         });
-        return taskWithCat;
+        // also want to add attachment before returning
+        const taskWithAttchments: ReadonlyArray<TaskModel> = taskWithCat.map(
+            task => {
+                const attachments = taskAttachments.filter(a => a.task_id == task.id);
+                return {
+                    ...task,
+                    taskAttachments: attachments
+                }
+            }
+        );
+
+        return taskWithAttchments;
     }
 )
 
