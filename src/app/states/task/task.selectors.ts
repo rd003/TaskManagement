@@ -46,7 +46,7 @@ export const tasksWithCategory = createSelector(
                 }
             }
         );
-
+        // newly added attachment is not here
         return taskWithAttchments;
     }
 )

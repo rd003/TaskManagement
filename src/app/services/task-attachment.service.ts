@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, catchError, map, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { TaskAttachmentCreateModel, TaskAttachmentListModel, TaskAttachmentModel } from '../models/task-attachment.model';
 
@@ -13,10 +13,20 @@ export class TaskAttachmentService {
 
   uploadFile(taskReq:TaskAttachmentCreateModel):Observable<TaskAttachmentModel>  {
    // console.log({task_id,file})
-    const formData: FormData = new FormData();
-    formData.append("task_id", taskReq.task_id);
-    formData.append("attachment", taskReq.file);
-    return this.http.post<TaskAttachmentModel>(this.baseUrl, formData);
+    // const formData: FormData = new FormData();
+    // formData.append("task_id", taskReq.task_id);
+    // formData.append("attachment", taskReq.file);
+    // return this.http.post<TaskAttachmentModel>(this.baseUrl, formData);
+    const attchmt: TaskAttachmentModel = {
+      id: 'abc',
+      attachment: taskReq.file.name,
+      file_path: 'aa/asdf/',
+      collectionId: 'abc',
+      collectionName: 'asdf',
+      created: 'ssss', updated: '',
+      task_id: taskReq.task_id
+    };
+    return of(attchmt);
   }
 
   getAllAttachment(): Observable<TaskAttachmentModel[]> {
@@ -26,7 +36,7 @@ export class TaskAttachmentService {
           attachment.file_path = `${this.fileUrl}/${attachment.collectionId}/${attachment.id}/${attachment.attachment}`;
           return attachment;
         });
-       return a.items
+       return newItems
      })
     );
   }

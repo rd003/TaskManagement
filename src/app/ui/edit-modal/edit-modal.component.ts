@@ -4,8 +4,13 @@ import { Store } from '@ngrx/store';
 import { EMPTY, Subject, catchError, debounceTime, takeUntil, tap } from 'rxjs';
 import { TaskAttachmentCreateModel } from 'src/app/models/task-attachment.model';
 import { TaskModel } from 'src/app/models/task.model';
-import { TaskAttachmentService } from 'src/app/services/task-attachment.service';
+import { AppState } from 'src/app/states/app-state';
+import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attachment.actions';
 import { TaskActions } from 'src/app/states/task/task.actions';
+
+import * as TaskSelectors from 'src/app/states/task/task.selectors';
+import * as TaskAttachmentSelectors from 'src/app/states/task-attachment/task-attachment.selectors';
+
 
 @Component({
   selector: 'app-edit-modal',
@@ -103,9 +108,7 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
     return this.frm.controls;
   }
 
-  constructor(private fb: FormBuilder, private store:Store,private tas:TaskAttachmentService) {
-   
-  }
+  
 
   ngOnInit(): void {
     this.frm = this.fb.group({
@@ -161,11 +164,26 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
     const fileExtension:string = this.selectedFile?.name.split('.').pop()?.toLowerCase()??"";
     if (!allowedExtensions.includes(fileExtension))
       return;
-    const taskReq: TaskAttachmentCreateModel = { task_id: this.task.id, file: this.selectedFile };
-    this.tas.uploadFile(taskReq).pipe(
-      tap(console.log),
-      catchError(error => { console.log(error); return EMPTY})
-    ).subscribe();
+    const taskAttachment: TaskAttachmentCreateModel = {
+      task_id: this.task.id,
+      file: this.selectedFile
+    };
+    this.store.dispatch(taskAttachmentActions.addTaskAttachment({ taskAttachment }));
+    // this.store.select(TaskAttachmentSelectors.selectTaskAttachments).pipe(
+    //   tap(console.log)
+    // ).subscribe()
+    // this.store.select(TaskSelectors.tasksWithCategory).pipe(
+    //   tap(console.log)
+    // ).subscribe()
+    
+    // this.tas.uploadFile(taskReq).pipe(
+    //   tap(console.log),
+    //   catchError(error => { console.log(error); return EMPTY})
+    // ).subscribe();
   }
   
+  constructor(private fb: FormBuilder,
+    private store: Store<AppState>) {
+   
+  }
 }

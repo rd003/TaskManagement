@@ -47,5 +47,8 @@ export class MainLayoutComponent {
   onSelectedTask(task: TaskModel) {
     this.showPopup = true;
     this.selectedTask = task;
+    console.log({ '💩': task.taskAttachments });
+    //  adding new attachment wont reflect here, since it is already selected.
+    
   }
 }

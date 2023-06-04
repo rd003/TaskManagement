@@ -34,9 +34,32 @@ export class TaskAttachmentEffects{
 
     addTaskAttachment = createEffect(
         () => {
-            return this._actions$;
+            return this._actions$
+                .pipe(
+                    ofType(taskAttachmentActions.addTaskAttachment),
+                    switchMap(payload => {
+                        return this.attachmentService
+                            .uploadFile(payload.taskAttachment)
+                            .pipe(
+                                map(
+                                    taskAttachment => {
+                                      return  taskAttachmentActions.addTaskAttachmentSuccess({ taskAttachment })
+                                    }
+                                ),
+                                catchError(
+                                    error => (
+                                        of(
+                                            taskAttachmentActions
+                                                .addTaskAttachmentFailure({ error })
+                                        )
+                                    )
+                                )
+                            )
+                    }
+                    )
+                );
         }
-    )
+    );
 
     constructor(private _actions$:Actions,private attachmentService:TaskAttachmentService)
     {
