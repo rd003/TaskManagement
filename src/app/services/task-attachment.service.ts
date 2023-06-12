@@ -23,7 +23,8 @@ export class TaskAttachmentService {
       file_path: 'aa/asdf/',
       collectionId: 'abc',
       collectionName: 'asdf',
-      created: 'ssss', updated: '',
+      created: 'ssss',
+      updated: '',
       task_id: taskReq.task_id
     };
     return of(attchmt);

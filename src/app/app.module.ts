@@ -31,6 +31,7 @@ import { DropdownMenuComponent } from './ui/util/dropdown-menu/dropdown-menu.com
 import { EditModalComponent } from './ui/edit-modal/edit-modal.component';
 import { TaskAttachmentEffects } from './states/task-attachment/task-attachment.effects';
 import { TaskAttachmentReducer } from './states/task-attachment/task-attachment.reducers';
+import { selectedTaskReducer } from './states/selected-task/selected-task.reducers';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { TaskAttachmentReducer } from './states/task-attachment/task-attachment.
       taskCategories: taskCategoriesReducer,
       tasksState: taskReducer,
       taskCategoryLink: taskCategoryLinkReducer,
-      taskAttachments: TaskAttachmentReducer
+      taskAttachments: TaskAttachmentReducer,
+      selectedTask:selectedTaskReducer
     }),
     EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects,TaskAttachmentEffects])
   ],

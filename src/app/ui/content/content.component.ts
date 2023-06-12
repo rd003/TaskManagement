@@ -52,7 +52,6 @@ import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attac
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
          [displayCategory]="displayCategory"
-         (selectedTask)="OnSelectedTaskEvent.emit($event)"
          >
 
          </app-task-display>

@@ -14,7 +14,7 @@ import { TaskModel } from 'src/app/models/task.model';
        </button>
        <div class="flex relative">
             <app-side-nav [hideSideNav]="hideSidenav"></app-side-nav>
-            <app-content (OnSelectedTaskEvent)="onSelectedTask($event)" class="px-10 py-7  h-screen bg-gradient-to-r from-pink-400 to-pink-800 flex-1 flex flex-col"></app-content>
+            <app-content class="px-10 py-7  h-screen bg-gradient-to-r from-pink-400 to-pink-800 flex-1 flex flex-col"></app-content>
             <app-edit-modal 
             (closePopupEvent)="closePopup()"
             [task]="selectedTask"
@@ -47,7 +47,7 @@ export class MainLayoutComponent {
   onSelectedTask(task: TaskModel) {
     this.showPopup = true;
     this.selectedTask = task;
-    console.log({ '💩': task.taskAttachments });
+   // console.log({ '💩': task.taskAttachments });
     //  adding new attachment wont reflect here, since it is already selected.
     
   }

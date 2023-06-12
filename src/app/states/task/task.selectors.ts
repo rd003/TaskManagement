@@ -46,7 +46,7 @@ export const tasksWithCategory = createSelector(
                 }
             }
         );
-        // newly added attachment is not here
+        //task with category and newly added attachments are working fine
         return taskWithAttchments;
     }
 )
