@@ -11,8 +11,8 @@ export const taskAttachmentActions = createActionGroup({
         'Add Task Attachment': props<{ taskAttachment: TaskAttachmentCreateModel }>(),
         'Add Task Attachment Success': props<{ taskAttachment: TaskAttachmentModel }>(),
         'Add Task Attachment Failure': props<{ error: HttpErrorResponse }>(),
-        'Delete Task Attachment': props<{ task_id: number }>(),
-        'Delete Task Attachment Success': props<{ task_id: number }>(),
+        'Delete Task Attachment': props<{ id: string }>(),
+        'Delete Task Attachment Success': props<{ id: string }>(),
         'Delete Task Attachment Failure': props<{error:HttpErrorResponse}>()
     }
 })
