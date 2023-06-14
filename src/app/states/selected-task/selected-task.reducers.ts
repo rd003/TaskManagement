@@ -14,6 +14,7 @@ export const _initialSelectedTaskState: SelectedTaskState = {
     _initialSelectedTaskState,
       on(SelectedTaskActions.selectTask,
           (state, { task }) => ({ ...state, selectedTask: task })),
+      
       on(SelectedTaskActions.removeSelectedTask,
           state => ({ ...state, selectedTask: null }))
   );

@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subject, startWith, takeUntil, tap } from 'rxjs';
 import { TaskModel } from 'src/app/models/task.model';
+import * as SelectTaskSelectors from 'src/app/states/selected-task/selected-task.selectors';
 
 @Component({
   selector: 'app-main-layout',
@@ -28,10 +31,12 @@ import { TaskModel } from 'src/app/models/task.model';
   styles: [
   ]
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit,OnDestroy {
   hideSidenav = true;
   showPopup = false;
   selectedTask!: TaskModel;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+
   toggleSidenav() {
     this.hideSidenav = !this.hideSidenav;
   }
@@ -44,11 +49,40 @@ export class MainLayoutComponent {
   //   this.showPopup = true;
   // }
 
-  onSelectedTask(task: TaskModel) {
-    this.showPopup = true;
-    this.selectedTask = task;
-   // console.log({ '💩': task.taskAttachments });
-    //  adding new attachment wont reflect here, since it is already selected.
+  // onSelectedTask(task: TaskModel) {
+  //   this.showPopup = true;
+  //   this.selectedTask = task;
+  //  // console.log({ '💩': task.taskAttachments });
+  //   //  adding new attachment wont reflect here, since it is already selected.
+    
+  // }
+
+  // ng on init
+  ngOnInit(): void {
+    const selectedTask$ = this.store.select(SelectTaskSelectors.selectSelectedTask);
+    selectedTask$.pipe(
+      tap(task => {
+        if (task) {
+          this.selectedTask = task;
+          this.showPopup = true;
+        }
+        else
+          this.showPopup = false;
+
+      }),
+      takeUntil(this.destroyed$)
+    ).subscribe()
+  }
+  
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.unsubscribe();
+  }
+
+  /**
+   *
+   */
+  constructor(private store:Store) {
     
   }
 }

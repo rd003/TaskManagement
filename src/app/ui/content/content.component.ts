@@ -8,6 +8,7 @@ import { AppState } from 'src/app/states/app-state';
 import { TaskActions } from 'src/app/states/task/task.actions';
 import * as TaskSelectors from '../../states/task/task.selectors'
 import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attachment.actions';
+import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.actions';
 
 @Component({
   selector: 'app-content',
@@ -36,7 +37,7 @@ import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attac
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
          [displayCategory]="displayCategory"
-         (selectedTask)="OnSelectedTaskEvent.emit($event)"
+         (selectedTask)="OnTaskSelect($event)"
          >
          </app-task-display>
 
@@ -52,6 +53,7 @@ import { taskAttachmentActions } from 'src/app/states/task-attachment/task-attac
          (toggleTaskEvent)="toggleTask($event)"
          (toggleMarkImportant)="toggleMarkImportant($event)"
          [displayCategory]="displayCategory"
+         (selectedTask)="OnTaskSelect($event)"
          >
 
          </app-task-display>
@@ -104,6 +106,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
+
     this.searchTerm$ = this._store.select(TaskSelectors.selectSearchQuery).pipe(
       startWith('')
     );
@@ -153,4 +156,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
+
+  // add selected task to ngrx state
+  OnTaskSelect(task: TaskModel) {
+    this._store.dispatch(SelectedTaskActions.selectTask({ task }));
+  }
+
 }

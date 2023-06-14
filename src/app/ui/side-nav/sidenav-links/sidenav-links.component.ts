@@ -8,6 +8,7 @@ import { AppState } from 'src/app/states/app-state';
 import { TaskCategoryLinkActions } from 'src/app/states/task-category-link/task-category-link.action';
 import { SidenavLinksListComponent } from '../sidenav-links-list/sidenav-links-list.component';
 import * as TaskSelectors from '../../../states/task/task.selectors';
+import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.actions';
 
 
 @Component({
@@ -74,6 +75,8 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   dispatchSelectTaskCategory(selectedTaskCategory: TaskCategory) {
     //console.log(selectedTaskCategory);
     this._store.dispatch(TaskCategoryActions.selectTaskCategory({selectedTaskCategory}))
+    // remove selected task 
+    this._store.dispatch(SelectedTaskActions.removeSelectedTask());
   }
 
   

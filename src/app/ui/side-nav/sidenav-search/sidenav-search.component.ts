@@ -5,6 +5,7 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { AppState } from 'src/app/states/app-state';
 import * as TaskSelectors from '../../../states/task/task.selectors';
 import { TaskActions } from 'src/app/states/task/task.actions';
+import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.actions';
 
 @Component({
   selector: 'app-sidenav-search',
@@ -32,10 +33,13 @@ export class SidenavSearchComponent implements OnInit,OnDestroy {
          // if (!val) return
           //this._store.select(TaskSelectors.selectTasksBySearchQuery(val)).subscribe()
           this._store.dispatch(TaskActions.setSearchQuery({ searchQuery: val ?? "" }));
+          // remove selected task
+          this._store.dispatch(SelectedTaskActions.removeSelectedTask());
         }),
         takeUntil(this.destroy$)
       )
       .subscribe();
+    
   }
   
   ngOnDestroy(): void {

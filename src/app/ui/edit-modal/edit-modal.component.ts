@@ -143,6 +143,7 @@ export class EditModalComponent implements OnInit,OnChanges,OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task'] && this.task) {
+       //console.log(this.task)
        this.frm.patchValue(this.task);
     }
   }

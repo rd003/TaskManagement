@@ -32,6 +32,4 @@ export class TaskDisplayComponent {
    @Output() selectedTask = new EventEmitter<TaskModel>();
    @Input() displayCategory = false;
    //abc
-   
-
 }

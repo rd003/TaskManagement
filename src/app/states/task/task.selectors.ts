@@ -136,6 +136,3 @@ export const selectSearchQuery = createSelector(
       return filteredTasks;
     }
   );
-
-
-
