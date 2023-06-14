@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { TaskAttachmentService } from "src/app/services/task-attachment.service";
 import { taskAttachmentActions } from "./task-attachment.actions";
-import { catchError, map, of, switchMap } from "rxjs";
+import { catchError, map, of, switchMap, tap } from "rxjs";
 
 @Injectable()
 export class TaskAttachmentEffects{
@@ -60,6 +60,32 @@ export class TaskAttachmentEffects{
                 );
         }
     );
+
+    deleteTaskAttachment = createEffect(
+        () => {
+            return this._actions$.pipe(
+                ofType(taskAttachmentActions.deleteTaskAttachment),
+                switchMap(payload => {
+                    return this.attachmentService.deleteAttachment(payload.id)
+                        .pipe(
+                        tap(_=>console.log('inside tap')),
+                        map(_ =>
+                        {
+                            console.log('inside map')
+                            return taskAttachmentActions.deleteTaskAttachmentSuccess({ id: payload.id })
+                           }
+                        ),
+                        catchError(
+                            error => {
+                                console.log(error)
+                                return of(taskAttachmentActions.deleteTaskAttachmentFailure({ error }))
+                            }
+                        )
+                    )
+                })
+            );
+        }
+    )
 
     constructor(private _actions$:Actions,private attachmentService:TaskAttachmentService)
     {

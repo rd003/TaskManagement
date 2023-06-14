@@ -41,5 +41,11 @@ export class TaskAttachmentService {
      })
     );
   }
+
+  deleteAttachment(id: string) {
+     return EMPTY;
+    //return this.http.delete(`${this.baseUrl}/{id}`);
+  }
+
   constructor(private http:HttpClient) { }
 }
