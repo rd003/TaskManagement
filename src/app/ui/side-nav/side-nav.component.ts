@@ -30,7 +30,7 @@ export class SideNavComponent {
 
   // dispatch 'toggleAddNewTaskcategoryInput' action (done)
   toggleAddNewTaskCategoryInput() {
-    this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskcategoryInput());
+    this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskCategoryInput());
   }
 
   
