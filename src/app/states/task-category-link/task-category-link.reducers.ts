@@ -10,6 +10,6 @@ export const initialTaskCategoryLinkState: TaskCategoryLinkState = {
 
 export const taskCategoryLinkReducer = createReducer(
     initialTaskCategoryLinkState,
-    on(TaskCategoryLinkActions.toggleAddNewTaskcategoryInput,
+    on(TaskCategoryLinkActions.toggleAddNewTaskCategoryInput,
         state => ({ ...state, showAddNewTaskCategoryInput:!state.showAddNewTaskCategoryInput}))
 )

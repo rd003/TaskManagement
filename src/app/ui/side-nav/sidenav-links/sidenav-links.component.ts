@@ -117,7 +117,7 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   }
 
   private toggleAddNewTaskCategoryInput() {
-    this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskcategoryInput());
+    this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskCategoryInput());
   }
 
   constructor(private _store: Store<AppState>) {
