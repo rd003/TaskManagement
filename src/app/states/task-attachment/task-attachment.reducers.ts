@@ -62,7 +62,7 @@ export const TaskAttachmentReducer = createReducer(
         taskAttachmentActions.deleteTaskAttachmentSuccess,
         (state, { id }) => {
             var newTaskAttachment = state.taskAttachments.filter(a => a.id !== id);
-            console.log(newTaskAttachment)
+           // console.log(newTaskAttachment)
             return { ...state, loading: false, taskAttachments: newTaskAttachment };
         }
     ),

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, catchError, map, of, tap } from 'rxjs';
+import { EMPTY, NEVER, Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { TaskAttachmentCreateModel, TaskAttachmentListModel, TaskAttachmentModel } from '../models/task-attachment.model';
 
@@ -12,7 +12,6 @@ export class TaskAttachmentService {
   private fileUrl = environment.baseUrl + '/files';
 
   uploadFile(taskReq:TaskAttachmentCreateModel):Observable<TaskAttachmentModel>  {
-   // console.log({task_id,file})
     const formData: FormData = new FormData();
     formData.append("task_id", taskReq.task_id);
     formData.append("attachment", taskReq.file);
@@ -43,8 +42,8 @@ export class TaskAttachmentService {
   }
 
   deleteAttachment(id: string) {
-     return EMPTY;
-    //return this.http.delete(`${this.baseUrl}/{id}`);
+    // return of(true);
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
   constructor(private http:HttpClient) { }

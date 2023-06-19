@@ -14,11 +14,13 @@ export const selectSelectedTask = createSelector(
         const task: TaskModel | null = selectedTaskState.selectedTask;
         if (task === null)
             return task;
-        const existingAttachments = task.taskAttachments!;
+      //  const existingAttachments = task.taskAttachments!;
         const taskAttachments = attachments.filter(a => a.task_id === task.id);
-        const newAttachments: TaskAttachmentModel[] = [...new Set([...existingAttachments, ...taskAttachments])];
-
-        var newTask:TaskModel = { ...task,taskAttachments:newAttachments}; 
+      //  const newAttachments: TaskAttachmentModel[] = [...new Set([...existingAttachments, ...taskAttachments])];
+       // console.log(newAttachments);
+        
+        var newTask: TaskModel = { ...task, taskAttachments };
+        
         // add those attachments which are not present in task
         return newTask;
     }

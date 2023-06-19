@@ -68,10 +68,8 @@ export class TaskAttachmentEffects{
                 switchMap(payload => {
                     return this.attachmentService.deleteAttachment(payload.id)
                         .pipe(
-                        tap(_=>console.log('inside tap')),
                         map(_ =>
                         {
-                            console.log('inside map')
                             return taskAttachmentActions.deleteTaskAttachmentSuccess({ id: payload.id })
                            }
                         ),

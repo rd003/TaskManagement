@@ -68,7 +68,7 @@ import * as TaskAttachmentSelectors from 'src/app/states/task-attachment/task-at
                     <div class="flex-grow text-sm ml-auto" >
                       <a [href]="fileAttachment.file_path" target="_blank">{{fileAttachment.attachment}}</a>
                     </div>
-                    <button (click)="removeAttachment(task.id)" class="h-full border-0 hover:bg-gray-300 py-1 px-2 self-center">
+                    <button (click)="removeAttachment(fileAttachment.id)" class="h-full border-0 hover:bg-gray-300 py-1 px-2 self-center">
                       X
                     </button>
                 </div>

@@ -63,6 +63,8 @@ export class MainLayoutComponent implements OnInit,OnDestroy {
     selectedTask$.pipe(
       tap(task => {
         if (task) {
+          // deleted attachments are not being updated here
+          //console.log(task?.taskAttachments)
           this.selectedTask = task;
           this.showPopup = true;
         }
