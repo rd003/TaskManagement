@@ -57,6 +57,24 @@ export class TaskCategoriesEffects{
             ))
         );
     });
+
+    deleteTaskCategory = createEffect(() => {
+        return this._actions$.pipe(
+            ofType(TaskCategoryActions.deleteTaskCategory),
+            switchMap(({ id }) =>
+                this._taskCategoryService
+                    .deleteTaskCategory(id)
+                    .pipe(
+                        map(_ => TaskCategoryActions.deleteTaskCategorySuccess({ id })),
+                        catchError(error => {
+                            console.log(error);
+                            return of(TaskCategoryActions.deleteTaskCategoryFailure({ error }));
+                            }
+                            )
+                    )
+            )
+        )
+    })
    
     constructor(
         private _taskCategoryService: TaskCategoryService,

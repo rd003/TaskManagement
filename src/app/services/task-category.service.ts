@@ -33,6 +33,11 @@ export class TaskCategoryService{
        return this.http.post<TaskCategory>(this.baseUrl, taskCategory);
     }
 
+    deleteTaskCategory(id: string) {
+        //return of(true);
+        return this.http.delete(`${this.baseUrl}/${id}`);
+    }
+
     constructor(private http: HttpClient)
     { 
         

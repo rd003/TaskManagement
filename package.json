@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^16.1.1",
     "@angular/platform-browser-dynamic": "^16.1.1",
     "@angular/router": "^16.1.1",
+    "@costlydeveloper/ngx-awesome-popup": "^3.2.0",
     "@ngrx/effects": "^16.0.1",
     "@ngrx/store": "^16.0.1",
     "rxjs": "~7.8.0",

@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { TaskCategoryActions } from '../../../states/task-category/task-category.actions';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, catchError, of, takeUntil, tap } from 'rxjs';
 import { TaskCategory } from 'src/app/models/task-category.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppState } from 'src/app/states/app-state';
@@ -9,6 +9,7 @@ import { TaskCategoryLinkActions } from 'src/app/states/task-category-link/task-
 import { SidenavLinksListComponent } from '../sidenav-links-list/sidenav-links-list.component';
 import * as TaskSelectors from '../../../states/task/task.selectors';
 import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.actions';
+import { AppearanceAnimation, ConfirmBoxInitializer, DialogLayoutDisplay, DisappearanceAnimation } from '@costlydeveloper/ngx-awesome-popup';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.
          (selectTaskCategoryEvent)="dispatchSelectTaskCategory($event)"
          (newCategoryInputFocusOutEvent)="onNewCategoryInputFocusout($event)"
          (onKeyDownEvent)="onKeyDown($event)"
+         (onDeleteCategory)="onDeleteCategory($event)"
          ></app-sidenav-links-list>
       </ng-container>
     </nav>
@@ -32,14 +34,15 @@ import { SelectedTaskActions } from 'src/app/states/selected-task/selected-task.
   ]
 })
   
-export class SidenavLinksComponent implements OnInit,AfterViewInit {
+export class SidenavLinksComponent implements OnInit,AfterViewInit,OnDestroy {
   taskCategories$!: Observable<ReadonlyArray<TaskCategory>>;
   loading$!: Observable<boolean>;
   error$!: Observable<HttpErrorResponse|null>;
   selectedTaskCategory$!: Observable<TaskCategory | null>;
   showAddNewTaskCategoryInput$!: Observable<boolean>;
   @ViewChild(SidenavLinksListComponent) linksList!: SidenavLinksListComponent;
- 
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.showAddNewTaskCategoryInput$ = this._store.pipe(select(state => state.taskCategoryLink.showAddNewTaskCategoryInput)).pipe(
@@ -73,14 +76,14 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   }
 
   dispatchSelectTaskCategory(selectedTaskCategory: TaskCategory) {
-    //console.log(selectedTaskCategory);
+    console.log(selectedTaskCategory.id);
     this._store.dispatch(TaskCategoryActions.selectTaskCategory({selectedTaskCategory}))
     // remove selected task 
     this._store.dispatch(SelectedTaskActions.removeSelectedTask());
   }
 
   
-  onNewCategoryInputFocusout(title:string) {
+  onNewCategoryInputFocusout(title: string) {
     this.updateTaskCategoryList(title);
   }
 
@@ -119,7 +122,38 @@ export class SidenavLinksComponent implements OnInit,AfterViewInit {
   private toggleAddNewTaskCategoryInput() {
     this._store.dispatch(TaskCategoryLinkActions.toggleAddNewTaskCategoryInput());
   }
+  
+  onDeleteCategory(taskCategory: TaskCategory) {
+    const confirmBox = new ConfirmBoxInitializer();
+    confirmBox.setTitle('Are you sure?');
+    confirmBox.setMessage(`Are you sure to delete category : ${taskCategory.title} ?`);
+    confirmBox.setConfig({
+      layoutType: DialogLayoutDisplay.DANGER, // SUCCESS | INFO | NONE | DANGER | WARNING
+      animationIn: AppearanceAnimation.BOUNCE_IN, // BOUNCE_IN | SWING | ZOOM_IN | ZOOM_IN_ROTATE | ELASTIC | JELLO | FADE_IN | SLIDE_IN_UP | SLIDE_IN_DOWN | SLIDE_IN_LEFT | SLIDE_IN_RIGHT | NONE
+      animationOut: DisappearanceAnimation.BOUNCE_OUT, // BOUNCE_OUT | ZOOM_OUT | ZOOM_OUT_WIND | ZOOM_OUT_ROTATE | FLIP_OUT | SLIDE_OUT_UP | SLIDE_OUT_DOWN | SLIDE_OUT_LEFT | SLIDE_OUT_RIGHT | NONE
+    });
 
+    confirmBox.openConfirmBox$()
+      .pipe(
+        tap(val => {
+          if (val.success) {
+            this._store.dispatch(TaskCategoryActions.deleteTaskCategory({ id:taskCategory.id }));
+         }
+        }),
+        catchError(error => {
+          console.log(error);
+          return of(null);
+        }
+        ),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.unsubscribe();
+  }
   constructor(private _store: Store<AppState>) {
      
   }

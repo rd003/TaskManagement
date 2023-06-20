@@ -15,5 +15,8 @@ export const TaskCategoryActions = createActionGroup({
         'Add Task Category': props<{ taskCategory: TaskCategory }>(),
         'Add Task Category Success': props<{ taskCategory: TaskCategory }>(),
         'Add Task Category Failure':props<{ error:HttpErrorResponse|null }>(),
+        'Delete Task Category': props<{ id: string }>(),
+        'Delete Task Category Success': props<{id:string}>(),
+        'Delete Task Category Failure': props<{error:HttpErrorResponse}>(),
     }
 })

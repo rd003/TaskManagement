@@ -32,6 +32,7 @@ import { EditModalComponent } from './ui/edit-modal/edit-modal.component';
 import { TaskAttachmentEffects } from './states/task-attachment/task-attachment.effects';
 import { TaskAttachmentReducer } from './states/task-attachment/task-attachment.reducers';
 import { selectedTaskReducer } from './states/selected-task/selected-task.reducers';
+import { ConfirmBoxConfigModule, NgxAwesomePopupModule } from '@costlydeveloper/ngx-awesome-popup';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,9 @@ import { selectedTaskReducer } from './states/selected-task/selected-task.reduce
       taskAttachments: TaskAttachmentReducer,
       selectedTask:selectedTaskReducer
     }),
-    EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects,TaskAttachmentEffects])
+    EffectsModule.forRoot([TaskCategoriesEffects,TaskEffects,TaskAttachmentEffects]),
+    NgxAwesomePopupModule.forRoot(),
+    ConfirmBoxConfigModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
